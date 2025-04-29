@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up</title>
+</head>
+<body>
+
+  <section id="signup-auth">
+    <h3 class="form-header">Sign Up</h3>
+
+    <div class="inputs-container">
+      <p class="error-display" style="display: none;"></p>
+      <div class="input-box">
+        <input type="text" class="signup-email-input">
+        <label>Email</label>
+      </div>
+      <div class="input-box">
+        <input type="password" class="signup-password-input">
+        <label>Password</label>
+      </div>
+    </div>
+
+    <button class="signup-btn">Sign Up</button>
+    <p>Already a user? <a href="/login">Login</a></p>
+  </section>
+
+  <script type="module" src="./scripts/authentication/user-auth-elements.js"></script>
+  <script type="module" src="./scripts/authentication/client-side-validation.js"></script>
+  <script type="module" src="./scripts/authentication/user-signup.js"></script>
+</body>
+</html>
