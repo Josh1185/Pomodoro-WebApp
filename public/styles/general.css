@@ -8,18 +8,19 @@
 }
 
 :root {
-  /* Light Mode */
+  /* Light Mode
   --background-color-1: #ffffff;
   --background-color-2: #ececec;
   --text-color: #000000;
   --accent-color: #f66262;
+  */
 
-  /* Dark Mode */ /*
+  /* Dark Mode */ 
   --background-color-1: #1a1a1a;
   --background-color-2: #202020;
   --text-color: #ffffff;
   --accent-color: #f66262;
-  */
+  
 }
 
 html {

@@ -29,9 +29,10 @@ body {
   text-align: center;
   gap: 30px;
   animation: expand 1.5s ease forwards;
-  background-color: var(--background-color-2);
+  background-color: var(--background-color-1);
   position: relative;
   transition: all 1.5s ease;
+  padding: 2rem;
 }
 
 .welcome-screen h1 {
@@ -50,18 +51,18 @@ body {
 }
 
 .welcome-screen button {
-  animation: slideUp 2s ease-in-out forwards;
+  animation: slideUp 2s ease-in-out forwards, scaling 5s ease-in-out 2s infinite;
   padding: 0.8em 1.75em;
   background-color: transparent;
-  border-radius: 6px;
-  border: .3px solid var(--accent-color);
+  border-radius: 10px;
+  border: 1px solid var(--accent-color);
   transition: .5s;
   position: relative;
   overflow: hidden;
   cursor: pointer;
   z-index: 1;
   font-weight: 300;
-  font-size: 17px;
+  font-size: 2.5rem;
   text-transform: uppercase;
   color: var(--accent-color);
 }
@@ -87,7 +88,7 @@ body {
 }
 
 .welcome-screen button:hover {
-  color: var(--background-color-1);
+  color: #fff;
 }
 
 .welcome-screen button:hover::after {
@@ -127,3 +128,34 @@ body {
   }
 }
 
+@keyframes scaling {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .welcome-screen h1 {
+    font-size: 4.5rem;
+  }
+  .welcome-screen h6 {
+    font-size: 1.5rem;
+  }
+  .welcome-screen button {
+    font-size: 1.75rem;
+    background-color: var(--accent-color);
+    color: #fff;
+  }
+}
