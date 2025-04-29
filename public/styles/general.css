@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Arial', sans-serif;
+}
+
+:root {
+  /* Light Mode */
+  --background-color-1: #ffffff;
+  --background-color-2: #ececec;
+  --text-color: #000000;
+  --accent-color: #f66262;
+
+  /* Dark Mode */ /*
+  --background-color-1: #1a1a1a;
+  --background-color-2: #202020;
+  --text-color: #ffffff;
+  --accent-color: #f66262;
+  */
+}
+
+html {
+  font-size: 62.5%;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-color);
+  margin-bottom: 0.5em;
+}
+
+h1 { font-size: 3.5rem; }
+h2 { font-size: 3rem; }
+h3 { font-size: 2.75rem; }
+h4 { font-size: 2.5rem; }
+h5 { font-size: 2.25rem; }
+h6 { font-size: 2rem; }
+
+/* Paragraphs */
+p {
+  color: var(--text-color);
+  font-size: 1.5rem;
+  margin-bottom: 1em;
+}
+
+button {
+  font-size: 1.5rem;
+}
+
+/* Links */
+a {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #0056b3;
+}

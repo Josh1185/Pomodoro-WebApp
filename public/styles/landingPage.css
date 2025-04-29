@@ -1,0 +1,129 @@
+* {
+  overflow: hidden;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  z-index: -10;
+  background-color: var(--accent-color);
+}
+
+.welcome-screen {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 30px;
+  animation: expand 1.5s ease forwards;
+  background-color: var(--background-color-2);
+  position: relative;
+  transition: all 1.5s ease;
+}
+
+.welcome-screen h1 {
+  animation: slideUp 1.75s ease-in-out forwards;
+  font-size: 7.2rem;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.welcome-screen h1 span {
+  color: var(--accent-color);
+}
+
+.welcome-screen h6 {
+  animation: slideUp 2s ease-in-out forwards;
+}
+
+.welcome-screen button {
+  animation: slideUp 2s ease-in-out forwards;
+  padding: 0.8em 1.75em;
+  background-color: transparent;
+  border-radius: 6px;
+  border: .3px solid var(--accent-color);
+  transition: .5s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+  font-weight: 300;
+  font-size: 17px;
+  text-transform: uppercase;
+  color: var(--accent-color);
+}
+
+.welcome-screen button::after, .welcome-screen button::before {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: skew(90deg) translate(-50%, -50%);
+  position: absolute;
+  inset: 50%;
+  left: 25%;
+  z-index: -1;
+  transition: .5s ease-out;
+  background-color: var(--accent-color);
+}
+
+.welcome-screen button::before {
+  top: -50%;
+  left: -25%;
+  transform: skew(90deg) rotate(180deg) translate(-50%, -50%);
+}
+
+.welcome-screen button:hover {
+  color: var(--background-color-1);
+}
+
+.welcome-screen button:hover::after {
+  transform: skew(45deg) translate(-50%, -50%);
+}
+
+.welcome-screen button:active {
+  filter: brightness(.7);
+  transform: scale(.98);
+}
+
+.welcome-screen button:hover::before {
+  transform: skew(45deg) rotate(180deg) translate(-50%, -50%);
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(300px);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes expand {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
