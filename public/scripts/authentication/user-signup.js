@@ -56,4 +56,7 @@ export async function registerNewUser() {
   }
 }
 
+signUpContent.addEventListener('submit', e => {
+  e.preventDefault();
+});
 signUpBtn.addEventListener('click', registerNewUser);

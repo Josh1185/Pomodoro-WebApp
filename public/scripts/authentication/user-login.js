@@ -55,4 +55,7 @@ export async function loginUser() {
   }
 }
 
+loginContent.addEventListener('submit', e => {
+  e.preventDefault();
+});
 loginBtn.addEventListener('click', loginUser);

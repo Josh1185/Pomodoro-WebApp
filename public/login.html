@@ -4,26 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+  <link rel="stylesheet" href="styles/general.css">
+  <link rel="stylesheet" href="styles/loginSignupForm.css">
 </head>
 <body>
-  <section id="login-auth">
-    <h3 class="form-header">Login</h3>
+  <form id="login-auth">
+    <h3 class="form-header">Welcome Back!</h3>
 
     <div class="inputs-container">
-      <p class="error-display" style="display: none;"></p>
       <div class="input-box">
-        <input type="text" class="login-email-input">
+        <input type="text" class="login-email-input" required>
         <label>Email</label>
       </div>
       <div class="input-box">
-        <input type="password" class="login-password-input">
+        <input type="password" class="login-password-input" required>
         <label>Password</label>
       </div>
+      <p class="error-display" style="display: none;"></p>
     </div>
 
     <button class="login-btn">Login</button>
     <p>New around here? <a href="/signup">Sign up</a></p>
-  </section>
+  </form>
 
   <script type="module" src="./scripts/authentication/user-auth-elements.js"></script>
   <script type="module" src="./scripts/authentication/client-side-validation.js"></script>
