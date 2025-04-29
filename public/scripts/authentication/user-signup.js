@@ -1,6 +1,11 @@
 import { signUpContent, signUpBtn, signUpEmailInput, signUpPwdInput, errorDisplay } from "./user-auth-elements.js";
 import { validateEmail, validatePwd } from './client-side-validation.js';
 
+// Redirect if user is already logged in
+if (localStorage.getItem('token')) {
+  window.location.href = '/dashboard';
+}
+
 let token = localStorage.getItem('token');
 const apiBase = '/';
 
@@ -36,17 +41,21 @@ export async function registerNewUser() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: emailVal, password: pwdVal })
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw Error(errorData.error || 'Registration failed. Try again');
+    }
+
     data = await response.json();
 
+    token = data.token;
+    localStorage.setItem('token', token);
+    signUpBtn.innerText = 'Loading...';
     
-    if (data.token) {
-      token = data.token;
-      localStorage.setItem('token', token);
-      signUpBtn.innerText = 'Loading...';
-    } else {
-      throw Error('Failed to authenticate...');
-    }
-    
+    // Redirect
+    window.location.href = '/dashboard';
+
   } catch (err) {
     console.log(err.message);
     errorDisplay.innerText = err.message;

@@ -6,6 +6,11 @@
   <title>Login</title>
   <link rel="stylesheet" href="styles/general.css">
   <link rel="stylesheet" href="styles/loginSignupForm.css">
+  <script>
+    if (localStorage.getItem('token')) {
+      localStorage.removeItem('token');
+    }
+  </script>
 </head>
 <body>
   <form id="login-auth">
