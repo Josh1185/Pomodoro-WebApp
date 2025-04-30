@@ -1,0 +1,141 @@
+import { timerState, getMinutes, setMinutes } from "./timerState.js";
+import { timerDisplay, startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, shortBreakStepBtn, longBreakStepBtn, currentTimerStepMsg, progressBar, timerContainer } from "./timerElements.js";
+import { deactivatePrevStepBtn } from "./timerEvents.js";
+
+let startingMins = getMinutes('pomo');
+let time = (startingMins * 60) - 1;
+let progressDegrees = 0;
+
+export function initializeTimer(mins) {
+  timerState.timerRunning = false;
+  clearInterval(timerState.intervalId);
+  startingMins = mins;
+  time = (startingMins * 60) - 1;
+  timerState.progressPercentage = 0;
+  updateTimerDisplay();
+  document.title = `${displayTimerStepInHeader()} (${startingMins}:00)`;
+  progressBar.style.background = `
+    conic-gradient(
+      var(--accent-color) 0deg,
+      var(--background-color-2) 0deg
+    )
+  `;
+  startTimerBtn.style.display = 'flex';
+  pauseTimerBtn.style.display = 'none';
+  displayTimerStep();
+}
+
+function updateTimerDisplay() {
+  if (startingMins < 10) {
+    timerDisplay.textContent = `0${startingMins}:00`;
+  } else {
+    timerDisplay.textContent = `${startingMins}:00`;
+  }
+}
+
+export function displayTimerStep() {
+  switch (timerState.currentStep) {
+    case "pomodoro":
+      currentTimerStepMsg.textContent = `Time to focus #${timerState.pomodoroStepIndex}`;
+      break;
+    case "sb":
+      currentTimerStepMsg.textContent = `Time for short break #${timerState.shortBreakStepIndex}`;
+      break;
+    case "lb":
+      currentTimerStepMsg.textContent = `Time for a long break`;
+      break;
+  }
+}
+
+function displayTimerStepInHeader() {
+  switch (timerState.currentStep) {
+    case "pomodoro":
+      return `Focus #${timerState.pomodoroStepIndex}`;
+    case "sb":
+      return `Short break #${timerState.shortBreakStepIndex}`;
+    case "lb":
+      return `Long break`;
+  }
+}
+
+export function startTimer() {
+  // Minutes and seconds
+  let mins = Math.floor(time / 60);
+  let secs = time % 60;
+  // Adding preceding zero before value if it's less than 10
+  secs = secs < 10 ? `0${secs}` : secs;
+  mins = mins < 10 ? `0${mins}` : mins;
+  // Add mins and secs to display
+  timerDisplay.textContent = `${mins}:${secs}`;
+  document.title = `${displayTimerStepInHeader()} (${mins}:${secs})`;
+
+  // Progress bar logic
+  const progressPercentageIncrement = (100 / (startingMins * 60));
+  timerState.progressPercentage += progressPercentageIncrement;
+  // Convert percentage to degrees (Pie chart)
+  progressDegrees = (timerState.progressPercentage / 100) * 360;
+  // Update progress bar
+  progressBar.style.background = `
+    conic-gradient(
+      var(--accent-color) ${progressDegrees}deg,
+      var(--background-color-2) 0deg
+    )
+  `;
+
+  // Decrement the time each second
+  time--;
+  // Check if the timer is done (time < 0)
+  if (time < 0) timerEnds();
+}
+
+export function timerEnds() {
+  timerState.timerRunning = false;
+
+  switch (timerState.currentStep) {
+    // was a pomodoro timer
+    case "pomodoro":
+      // First 3 pomodoros are followed by short breaks
+      if (timerState.pomodoroStepIndex <= 3) {
+        // Increment pomoIndex and change step to short break
+        timerState.pomodoroStepIndex++;
+        timerState.currentStep = 'sb';
+        shortBreakStepBtn.classList.add('active');
+        // DO LATER: UPDATE POMODORO PROGRESS ON TASK
+
+        // Initialize timer
+        deactivatePrevStepBtn(timerState.currentStep);
+        initializeTimer(getMinutes('sb'));
+      }
+      // After 3 pomodoros, switch to a long break
+      else {
+        // Change step to long break and reset indexes for pomodoros and short breaks
+        timerState.currentStep = 'lb';
+        longBreakStepBtn.classList.add('active');
+        timerState.pomodoroStepIndex = 1;
+        timerState.shortBreakStepIndex = 1;
+        // DO LATER: UPDATE POMODORO PROGRESS ON TASK
+
+        // Initialize timer
+        deactivatePrevStepBtn(timerState.currentStep);
+        initializeTimer(getMinutes('lb'));
+      }
+      break;
+    // was a short break timer
+    case "sb":
+      // Increment shortBreak Index and change timer back to a pomodoro
+      timerState.shortBreakStepIndex++;
+      timerState.currentStep = 'pomodoro';
+      pomodoroStepBtn.classList.add('active');
+      deactivatePrevStepBtn(timerState.currentStep);
+      initializeTimer(getMinutes('pomo'));
+      break;
+    // was a long break timer
+    case "lb":
+      // Change back to a pomodoro
+      timerState.currentStep = 'pomodoro';
+      pomodoroStepBtn.classList.add('active');
+      deactivatePrevStepBtn(timerState.currentStep);
+      initializeTimer(getMinutes('pomo'));
+      break;
+  }
+}

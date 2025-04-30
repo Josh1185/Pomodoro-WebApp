@@ -18,6 +18,7 @@
   border-radius: 15px;
   width: 80%;
   max-width: 500px;
+  animation: fadeIn 2s ease;
 }
 
 .circle-bar {

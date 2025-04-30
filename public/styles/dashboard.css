@@ -18,7 +18,7 @@ header {
   display: flex;
   align-items: center;
   box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.27);
-  animation: menuSlideDown 1s ease-in-out forwards;
+  animation: fadeIn 2s ease;
 }
 
 /* left header */
@@ -81,11 +81,11 @@ header {
   fill: var(--text-color);
 }
 
-.tab-btn.active {
+.tab-btn.timer-tab.active, .tab-btn.tasks-tab.active, .tab-btn.stats-tab.active, .tab-btn.settings-tab.active {
   color: var(--accent-color);
 }
 
-.tab-btn.active svg {
+.tab-btn.timer-tab.active svg, .tab-btn.tasks-tab.active svg, .tab-btn.stats-tab.active svg, .tab-btn.settings-tab.active svg {
   fill: var(--accent-color);
 }
 
