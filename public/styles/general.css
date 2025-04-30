@@ -34,29 +34,29 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0.5em;
 }
 
-h1 { font-size: 3.5rem; }
-h2 { font-size: 3rem; }
-h3 { font-size: 2.75rem; }
-h4 { font-size: 2.5rem; }
-h5 { font-size: 2.25rem; }
-h6 { font-size: 2rem; }
+h1 { font-size: clamp(3rem, 4vw, 4rem); }
+h2 { font-size: clamp(2.4rem, 3vw, 3.2rem); }
+h3 { font-size: clamp(2rem, 2.5vw, 2.8rem); }
+h4 { font-size: clamp(1.8rem, 2vw, 2.4rem); }
+h5 { font-size: clamp(1.6rem, 1.5vw, 2rem); }
+h6 { font-size: clamp(1.4rem, 1.2vw, 1.6rem); }
 
 /* Paragraphs */
 p {
   color: var(--text-color);
-  font-size: 1.5rem;
+  font-size: clamp(1.4rem, 1.6vw, 1.6rem);
   margin-bottom: 1em;
   font-weight: 300;
 }
 
 label, input {
-  font-size: 1.5rem;
+  font-size: clamp(1.4rem, 1.6vw, 1.6rem);
   font-weight: 300;
   color: var(--text-color);
 }
 
 button {
-  font-size: 1.5rem;
+  font-size: clamp(1.4rem, 1.6vw, 1.6rem);
   font-weight: 300;
 }
 
@@ -74,6 +74,28 @@ a:hover {
   0% {
     opacity: 0;
     transform: translateY(300px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes menuSlideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-300px);
+  }
+}
+
+@keyframes menuSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-300px);
   }
   100% {
     opacity: 1;
