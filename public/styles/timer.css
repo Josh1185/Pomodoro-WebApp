@@ -1,0 +1,168 @@
+.timer-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--background-color-1);
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.27);
+  padding: 0 20px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.circle-bar {
+  position: relative;
+  height: 250px;
+  width: 250px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--accent-color) 0deg,
+    var(--background-color-2) 0deg
+  );
+  background-color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.27);
+}
+
+.circle-bar::before {
+  content: "";
+  position: absolute;
+  height: 210px;
+  width: 210px;
+  border-radius: 50%;
+  background-color: var(--background-color-1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.27);
+}
+
+.timer {
+  position: relative;
+  font-size: 6.4rem;
+  font-family: Ubuntu Mono, monospace;
+  color: var(--text-color);
+}
+
+.timer-type-selection {
+  width: 100%;
+  display: flex;
+  border-bottom: 2px solid var(--background-color-2);
+  align-items: center;
+}
+
+.timer-tab-btn {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  transition: all 0.15s;
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.timer-tab-btn.active {
+  color: var(--accent-color);
+}
+
+.timer-tab-btn:hover {
+  background-color: var(--background-color-2);
+}
+
+.current-timer-step-msg {
+  margin: 0;
+}
+
+.timer-controls {
+  width: 100%;
+  border-top: 2px solid var(--background-color-2);
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer-controls button {
+  background-color: var(--background-color-1);
+  border: 1px solid var(--accent-color);
+  cursor: pointer;
+  padding: 1rem 1rem;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s;
+}
+
+.timer-controls button svg {
+  fill: var(--accent-color);
+  width: 32px;
+  height: 32px;
+  transition: all 0.15s;
+}
+
+.timer-controls button:hover {
+  background-color: var(--accent-color);
+}
+
+.timer-controls button:hover svg {
+  fill: #fff;
+}
+
+.start-timer-btn {
+  display: flex;
+}
+
+.pause-timer-btn {
+  display: none;
+}
+
+.skip-timer-btn {
+  display: flex;
+}
+
+@media only screen and (max-width: 600px) {
+  .timer-controls button {
+    background-color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    cursor: pointer;
+    padding: 0.8rem 0.8rem;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 0.15s;
+  }
+  
+  .timer-controls button svg {
+    fill: #fff;
+    width: 24px;
+    height: 24px;
+    transition: all 0.15s;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .timer-type-selection {
+    width: 100%;
+    display: flex;
+    border-bottom: none;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timer-tab-btn {
+    width: 100%;
+    border-bottom: 2px solid var(--background-color-2);
+  }
+}
