@@ -1,0 +1,137 @@
+.add-task-form-wrapper {
+  position: fixed;
+  z-index: 200;
+  background-color: rgba(0, 0, 0, 0.27);
+  backdrop-filter: blur(2px);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  animation: fadeIn 1s ease;
+  display: none;
+}
+
+.add-task-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 450px;
+  border-radius: 15px;
+  background-color: var(--background-color-1);
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.27);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  animation: fadeIn 1s ease;
+  overflow: hidden;
+}
+
+.inputs-container {
+  width: 75%;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border-bottom: 2px solid var(--background-color-2);
+  margin: 30px 0;
+}
+
+.input-box label {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  color: var(--font-color);
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label {
+  top: -5px;
+  color: var(--accent-color);
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  padding-left: 5px;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.number-input-box {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: left;
+}
+
+.number-input-box input {
+  width: 50px;
+  outline: none;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid var(--background-color-2);
+  padding: 5px;
+}
+
+.number-input-box label {
+  padding-left: 5px;
+  transition: 0.5s;
+}
+
+.number-input-box input:focus~label,
+.number-input-box input:valid~label {
+  color: var(--accent-color);
+}
+
+.error-display {
+  text-align: left;
+  font-style: italic;
+}
+
+.add-task-form-btns {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.add-task-form-btns button {
+  flex: 1;
+  border: none;
+  border-top: 2px solid var(--background-color-2);
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.add-task-form-btns button svg {
+  fill: var(--font-color);
+  width: 20px;
+  height: 20px;
+  transition: all 0.15s;
+}
+
+.add-task-form-btns button:hover svg {
+  fill: var(--accent-color);
+}
+
+.add-task-form-btns button:hover {
+  background-color: var(--background-color-2);
+  color: var(--accent-color);
+}
