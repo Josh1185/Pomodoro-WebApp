@@ -57,7 +57,6 @@
 .timer-type-selection {
   width: 100%;
   display: flex;
-  border-bottom: 2px solid var(--background-color-2);
   align-items: center;
 }
 
@@ -69,10 +68,12 @@
   padding: 1rem 0.5rem;
   cursor: pointer;
   color: var(--text-color);
+  border-bottom: 2px solid var(--background-color-2);
 }
 
 .timer-tab-btn.active {
   color: var(--accent-color);
+  border-bottom: 2px solid var(--accent-color);
 }
 
 .timer-tab-btn:hover {
