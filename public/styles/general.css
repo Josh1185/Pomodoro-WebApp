@@ -14,12 +14,27 @@
   --text-color: #000000;
   --accent-color: #f66262;
   
+  
   /* Dark Mode 
   --background-color-1: #1a1a1a;
   --background-color-2: #202020;
   --text-color: #ffffff;
   --accent-color: #f66262;
   */
+  
+  /* colors 
+
+  classic red: #f66262
+  green: #43a121
+  blue: #3b61dd
+  lightblue: #46e5e8
+  purple: #751ca9
+  pink: #cd7dce
+  yellow: #e8de28
+  orange: #e48118
+  grey: #515151
+  */
+
 }
 
 html {

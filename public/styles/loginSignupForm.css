@@ -40,7 +40,7 @@ body {
   top: 50%;
   left: 5px;
   transform: translateY(-50%);
-  color: var(--font-color);
+  color: var(--text-color);
   pointer-events: none;
   transition: 0.5s;
 }

@@ -1,5 +1,5 @@
-import { signUpContent, signUpBtn, signUpEmailInput, signUpPwdInput, errorDisplay } from "./user-auth-elements.js";
-import { validateEmail, validatePwd } from './client-side-validation.js';
+import { signUpContent, signUpBtn, signUpEmailInput, signUpPwdInput, errorDisplay, signUpConfirmPwdInput } from "./user-auth-elements.js";
+import { validateEmail, validatePwd, pwdsMatch } from './client-side-validation.js';
 
 // Redirect if user is already logged in
 if (localStorage.getItem('token')) {
@@ -13,10 +13,12 @@ export async function registerNewUser() {
   // Access email and pwd values
   const emailVal = signUpEmailInput.value;
   const pwdVal = signUpPwdInput.value;
+  const confirmPwdVal = signUpConfirmPwdInput.value;
 
   // Client side validation
   const emailValidationErrMsg = validateEmail(emailVal);
   const pwdValidationErrMsg = validatePwd(pwdVal);
+  const confirmPwdValidationErrMsg = pwdsMatch(confirmPwdVal, pwdVal);
 
   if (emailValidationErrMsg) {
     errorDisplay.style.display = 'block';
@@ -27,6 +29,12 @@ export async function registerNewUser() {
   if (pwdValidationErrMsg) {
     errorDisplay.style.display = 'block';
     errorDisplay.innerHTML = pwdValidationErrMsg;
+    return;
+  }
+
+  if (confirmPwdValidationErrMsg) {
+    errorDisplay.style.display = 'block';
+    errorDisplay.innerHTML = confirmPwdValidationErrMsg;
     return;
   }
 

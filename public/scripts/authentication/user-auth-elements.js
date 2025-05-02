@@ -4,6 +4,7 @@ export const signUpContent = document.getElementById('signup-auth');
 export const signUpEmailInput = document.querySelector('.signup-email-input');
 export const signUpPwdInput = document.querySelector('.signup-password-input');
 export const signUpBtn = document.querySelector('.signup-btn');
+export const signUpConfirmPwdInput = document.querySelector('.confirm-signup-password-input');
 
 // Login elements
 export const loginContent = document.getElementById('login-auth');

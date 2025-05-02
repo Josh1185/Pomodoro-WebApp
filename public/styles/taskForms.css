@@ -87,6 +87,7 @@
 .number-input-box label {
   padding-left: 5px;
   transition: 0.5s;
+  color: var(--font-color);
 }
 
 .number-input-box input:focus~label,
