@@ -58,4 +58,38 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Edit a task  PUT /edit/:id
+router.put('/edit/:id', async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      estimated_pomodoros
+    } = req.body;
+    const taskId = req.params.id;
+
+    const editTask = `
+      UPDATE tasks
+      SET title = $1,
+          description = $2,
+          estimated_pomodoros = $3
+      WHERE id = $4 AND user_id = $5
+      RETURNING *
+    `;
+    const values = [title, description, estimated_pomodoros, taskId, req.userId];
+    
+    const result = await pool.query(editTask, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found or not authorized" });
+    }
+
+    res.json(result.rows[0]); //returns updated task
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to update task" });
+  }
+});
+
 export default router;

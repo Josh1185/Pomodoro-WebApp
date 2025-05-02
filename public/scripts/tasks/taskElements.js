@@ -20,7 +20,20 @@ export const addTaskEstPomosInput = document.querySelector('.add-task-est-pomos-
 export const submitAddTaskBtn = document.querySelector('.submit-add-task-btn');
 export const cancelAddTaskBtn = document.querySelector('.cancel-add-task-btn');
 
+// Edit task form elements
+export const toggleEditTaskForm = document.querySelector('.edit-task-form-wrapper');
+export const editTaskForm = document.querySelector('.edit-task-form');
+export const editTaskTitleInput = document.querySelector('.edit-task-title-input');
+export const editTaskDescInput = document.querySelector('.edit-task-desc-input');
+export const editTaskEstPomosInput = document.querySelector('.edit-task-est-pomos-input');
+export const submitEditTaskBtn = document.querySelector('.submit-edit-task-btn');
+export const cancelEditTaskBtn = document.querySelector('.cancel-edit-task-btn');
+
 addTaskForm.addEventListener('submit', e => {
+  e.preventDefault();
+});
+
+editTaskForm.addEventListener('submit', e => {
   e.preventDefault();
 });
 

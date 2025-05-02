@@ -1,4 +1,4 @@
-.add-task-form-wrapper {
+.add-task-form-wrapper, .edit-task-form-wrapper {
   position: fixed;
   z-index: 200;
   background-color: rgba(0, 0, 0, 0.27);
@@ -11,7 +11,7 @@
   display: none;
 }
 
-.add-task-form {
+.add-task-form, .edit-task-form {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -99,14 +99,14 @@
   font-style: italic;
 }
 
-.add-task-form-btns {
+.add-task-form-btns, .edit-task-form-btns {
   width: 100%;
   display: flex;
   align-items: center;
   margin-top: 30px;
 }
 
-.add-task-form-btns button {
+.add-task-form-btns button, .edit-task-form-btns button {
   flex: 1;
   border: none;
   border-top: 2px solid var(--background-color-2);
@@ -120,18 +120,18 @@
   gap: 5px;
 }
 
-.add-task-form-btns button svg {
+.add-task-form-btns button svg, .edit-task-form-btns button svg {
   fill: var(--font-color);
   width: 20px;
   height: 20px;
   transition: all 0.15s;
 }
 
-.add-task-form-btns button:hover svg {
+.add-task-form-btns button:hover svg, .edit-task-form-btns button:hover svg {
   fill: var(--accent-color);
 }
 
-.add-task-form-btns button:hover {
+.add-task-form-btns button:hover, .edit-task-form-btns button:hover {
   background-color: var(--background-color-2);
   color: var(--accent-color);
 }

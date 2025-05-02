@@ -88,6 +88,39 @@
 
     <div class="tasks-wrapper" style="display: none;">
 
+      <div class="edit-task-form-wrapper">
+        <form class="edit-task-form">
+          <h3 class="edit-task-form-header">Edit Task</h3>
+  
+          <div class="inputs-container">
+            <div class="input-box">
+              <input type="text" class="edit-task-title-input" required>
+              <label>Title</label>
+            </div>
+            <div class="input-box">
+              <input type="text" class="edit-task-desc-input" required>
+              <label>Description</label>
+            </div>
+            <div class="number-input-box">
+              <input type="number" class="edit-task-est-pomos-input" required>
+              <label>Estimated Pomodoros:</label>
+            </div>
+            <p class="error-display" style="display: none;"></p>
+          </div>
+  
+          <div class="edit-task-form-btns">
+            <button class="submit-edit-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+              Edit
+            </button>
+            <button class="cancel-edit-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
       <div class="add-task-form-wrapper">
         <form class="add-task-form">
           <h3 class="add-task-form-header">Add new task</h3>

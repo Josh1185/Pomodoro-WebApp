@@ -111,6 +111,12 @@
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.task-top-section:hover {
+  background-color: var(--background-color-2);
 }
 
 .task-progress-bar {

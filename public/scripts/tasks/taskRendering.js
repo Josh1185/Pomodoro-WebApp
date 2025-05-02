@@ -1,3 +1,4 @@
+import { editTask } from "./taskActions.js";
 import { tasksContainer } from "./taskElements.js";
 
 export function renderTasks(tasks) {
@@ -7,7 +8,12 @@ export function renderTasks(tasks) {
     taskListHTML += `
       <div class="task" data-id="${taskIndex}">
         <div class="task-top-section">
-          <div class="task-progress-bar">
+          <div class="task-progress-bar" style="
+            background: conic-gradient(
+              var(--accent-color) ${(task.completed_pomodoros / task.estimated_pomodoros) * 360}deg,
+              var(--background-color-2) 0deg
+            );
+          ">
             <span class="task-progress">${task.completed_pomodoros}/${task.estimated_pomodoros}</span>
           </div>
           <div class="task-info">
@@ -28,9 +34,25 @@ export function renderTasks(tasks) {
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
             Complete
           </button>
+          
+          <input class="task-title-${taskIndex}" value="${task.title}" style="display: none;">
+          <input class="task-desc-${taskIndex}" value="${task.description}" style="display: none;">
+          <input class="task-pomos-${taskIndex}" value="${task.estimated_pomodoros}" style="display: none;">
         </div>
       </div>
     `;
   });
   tasksContainer.innerHTML = taskListHTML;
+
+  // edit task buttons
+  document.querySelectorAll('.edit-task-btn').forEach((editTaskBtn) => {
+    const taskIndex = editTaskBtn.dataset.id;
+
+    editTaskBtn.addEventListener('click', () => {
+      const title = document.querySelector(`.task-title-${taskIndex}`).value;
+      const desc = document.querySelector(`.task-desc-${taskIndex}`).value;
+      const estPomos = document.querySelector(`.task-pomos-${taskIndex}`).value;
+      editTask(taskIndex, title, desc, estPomos);
+    });
+  });
 }
