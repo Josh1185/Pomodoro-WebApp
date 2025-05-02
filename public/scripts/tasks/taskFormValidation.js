@@ -18,9 +18,14 @@ export function validateTitle(field) {
 export function validateDescription(field) {
   if (!field) {
     return `<p>Please enter a description</p>`;
-  } else if (field.length > 300) {
+  } 
+  else if (field.length > 300) {
     return `<p>Description must be under 300 characters</p>`;
-  } else {
+  }
+  else if (regex.test(field)) {
+    return `<p>Invalid characters in description</p>`;
+  } 
+  else {
     return "";
   }
 }
@@ -36,9 +41,6 @@ export function validateEstimatedPomodoros(field) {
     !Number.isInteger(num)
   ) {
     return `<p>Estimated pomodoros must be a positive integer</p>`;
-  }
-  else if (regex.test(field)) {
-    return `<p>Invalid characters in description</p>`;
   }
   else {
     return "";
