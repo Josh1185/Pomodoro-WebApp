@@ -92,4 +92,31 @@ router.put('/edit/:id', async (req, res) => {
   }
 });
 
+// Delete a task DELETE /delete/:id
+router.delete('/delete/:id', async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const userId = req.userId;
+
+    const deleteTask = `
+      DELETE FROM tasks
+      WHERE id = $1 AND user_id = $2
+      RETURNING *
+    `;
+    const values = [taskId, userId];
+
+    const result = await pool.query(deleteTask, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found or not authorized" });
+    }
+
+    res.json({ message: "Task deleted successfully" });
+  }
+  catch (err) {
+    console.log("Error deleting task: " + err);
+    res.status(500).json({ error: "Inernal server error" });
+  }
+});
+
 export default router;

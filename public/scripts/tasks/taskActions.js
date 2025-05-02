@@ -23,7 +23,7 @@ export async function addTask() {
 
   try {
     // make api post request
-    await fetch(apiBase + 'tasks', {
+    const response = await fetch(apiBase + 'tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,6 +35,12 @@ export async function addTask() {
         estimated_pomodoros
       })
     });
+
+    // Check for an ok response
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to add task')
+    }
 
     // clear prev form values
     addTaskTitleInput.value = '';
@@ -48,7 +54,7 @@ export async function addTask() {
     fetchTasks();
   }
   catch (err) {
-    console.log(err);
+    console.log('Error adding task', err);
     errorDisplay.innerHTML = 'Failed to update task';
     errorDisplay.style.display = 'block';
   }
@@ -85,7 +91,7 @@ export async function editTask(index, title_, desc_, estPomos_) {
 
     try {
       // Make api put request
-      await fetch(`${apiBase}tasks/edit/${index}`, {
+      const response = await fetch(`${apiBase}tasks/edit/${index}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,6 +103,12 @@ export async function editTask(index, title_, desc_, estPomos_) {
           estimated_pomodoros
         })
       });
+
+      // Check for an ok response
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to edit task')
+      }
 
       // Clear prev form values
       editTaskTitleInput.value = '';
@@ -110,11 +122,15 @@ export async function editTask(index, title_, desc_, estPomos_) {
       fetchTasks();
     }
     catch (err) {
-      console.log(err);
+      console.log('Error editing task: ', err);
       errorDisplay.innerHTML = 'Failed to update task';
       errorDisplay.style.display = 'block';
     }
   }
+
+  // Delete any prior onclicks
+  submitEditTaskBtn.onclick = null;
+  cancelEditTaskBtn.onclick = null;
 
   submitEditTaskBtn.onclick = confirmEditTask;
   cancelEditTaskBtn.onclick = () => {
@@ -125,8 +141,29 @@ export async function editTask(index, title_, desc_, estPomos_) {
   }
 }
 
-export async function deleteTask() {
+export async function deleteTask(index) {
+  try {
+    // Make api delete request
+    const response = await fetch(`${apiBase}tasks/delete/${index}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      }
+    });
 
+    // Check for an ok response
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to delete task')
+    }
+
+    // Fetch tasks
+    fetchTasks();
+  }
+  catch (err) {
+    console.log('Error deleting task: ', err);
+  }
 }
 
 export async function markTaskComplete() {

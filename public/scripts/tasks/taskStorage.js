@@ -5,10 +5,20 @@ export const apiBase = '/';
 let tasks = [];
 
 export async function fetchTasks() {
-  const response = await fetch(apiBase + 'tasks', {
-    headers: { 'Authorization': token }
-  });
-  const tasksData = await response.json();
-  tasks = tasksData;
-  renderTasks(tasks);
+  try {
+    const response = await fetch(apiBase + 'tasks', {
+      headers: { 'Authorization': token }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch task data');
+    }
+    const tasksData = await response.json();
+    tasks = tasksData;
+    renderTasks(tasks);
+  }
+  catch (err) {
+    console.log('Failed to fetch task data', err)
+  }
 }

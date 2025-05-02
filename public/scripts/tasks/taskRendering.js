@@ -1,4 +1,4 @@
-import { editTask } from "./taskActions.js";
+import { editTask, deleteTask } from "./taskActions.js";
 import { tasksContainer } from "./taskElements.js";
 
 export function renderTasks(tasks) {
@@ -53,6 +53,15 @@ export function renderTasks(tasks) {
       const desc = document.querySelector(`.task-desc-${taskIndex}`).value;
       const estPomos = document.querySelector(`.task-pomos-${taskIndex}`).value;
       editTask(taskIndex, title, desc, estPomos);
+    });
+  });
+
+  // delete task buttons
+  document.querySelectorAll('.delete-task-btn').forEach((deleteTaskBtn) => {
+    const taskIndex = deleteTaskBtn.dataset.id;
+
+    deleteTaskBtn.addEventListener('click', () => {
+      deleteTask(taskIndex);
     });
   });
 }
