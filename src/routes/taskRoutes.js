@@ -21,6 +21,42 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get all of a logged in user's completed tasks
+router.get('/completed', async (req, res) => {
+  try {
+    const getCompletedTasks = `
+      SELECT * FROM tasks
+      WHERE user_id = $1 and is_completed = true
+    `;
+    const values = [req.userId];
+    const result = await pool.query(getCompletedTasks, values);
+    const taskList = result.rows;
+    res.json(taskList);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to fetch tasks' });
+  }
+});
+
+// Get a logged in user's current task
+router.get('/current', async (req, res) => {
+  try {
+    const getCompletedTasks = `
+      SELECT * FROM tasks
+      WHERE user_id = $1 and is_current = true
+    `;
+    const values = [req.userId];
+    const result = await pool.query(getCompletedTasks, values);
+    const taskList = result.rows;
+    res.json(taskList);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to fetch tasks' });
+  }
+});
+
 // Add a new task to the list
 router.post('/', async (req, res) => {
   try {
@@ -114,8 +150,121 @@ router.delete('/delete/:id', async (req, res) => {
     res.json({ message: "Task deleted successfully" });
   }
   catch (err) {
-    console.log("Error deleting task: " + err);
-    res.status(500).json({ error: "Inernal server error" });
+    console.log("Error deleting task: ", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Mark a task as completed PUT /complete/:id
+router.put('/complete/:id', async (req, res) => {
+  try {
+    const {
+      is_completed,
+      is_current
+    } = req.body;
+    const taskId = req.params.id;
+    const userId = req.userId;
+
+    const markTaskComplete = `
+      UPDATE tasks
+      SET is_completed = $1,
+          is_current = $2
+      WHERE id = $3 and user_id = $4
+      RETURNING *
+    `;
+    const values = [is_completed, is_current, taskId, userId];
+
+    const result = await pool.query(markTaskComplete, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found or not authorized" });
+    }
+
+    res.json({ message: "Task marked as complete" });
+  }
+  catch (err) {
+    console.log("Error marking task as complete: ", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// pin a task as current PUT /current/pin/:id
+router.put('/current/pin/:id', async (req, res) => {
+  try {
+    const { is_current } = req.body;
+    const taskId = req.params.id;
+    const userId = req.userId;
+
+    const client = await pool.connect();
+
+    try {
+      await client.query('BEGIN');
+
+      // Unset is_current for all other tasks (ensures that only one task can be pinned)
+      await client.query(`
+        UPDATE tasks 
+        SET is_current = false 
+        WHERE user_id = $1
+      `, [userId]);
+
+      const pinTaskAsCurrent = `
+        UPDATE tasks
+        SET is_current = $1
+        WHERE id = $2 and user_id = $3
+        RETURNING *
+      `;
+      const values = [is_current, taskId, userId];
+
+      const result = await client.query(pinTaskAsCurrent, values);
+
+      if (result.rowCount === 0) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({ error: "Task not found or not authorized" });
+      }
+
+      await client.query('COMMIT');
+      res.json({ message: "Task successfully pinned" });
+    }
+    catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    }
+    finally {
+      client.release();
+    }
+  }
+  catch (err) {
+    console.log("Error pinning task as current: ", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// unpin a current task PUT /current/unpin/:id
+router.put('/current/unpin/:id', async (req, res) => {
+  try {
+    const { is_current } = req.body;
+    const taskId = req.params.id;
+    const userId = req.userId;
+
+    const pinTaskAsCurrent = `
+      UPDATE tasks
+      SET is_current = $1
+      WHERE id = $2 and user_id = $3
+      RETURNING *
+    `;
+    const values = [is_current, taskId, userId];
+
+    const result = await pool.query(pinTaskAsCurrent, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found or not authorized" });
+    }
+
+    res.json({ message: "Task successfully unpinned" })
+  }
+  catch (err) {
+    console.log("Error unpinning task as current: ", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

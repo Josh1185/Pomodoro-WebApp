@@ -8,6 +8,7 @@ export const showIncompletedTasksBtn = document.querySelector('.incompleted-task
 export const showCompletedTasksBtn = document.querySelector('.completed-tasks-filter-btn');
 
 // Task list option buttons
+export const taskListOptions = document.querySelector('.task-list-options');
 export const addNewTaskBtn = document.querySelector('.add-new-task-btn');
 export const clearAllTasksBtn = document.querySelector('.clear-all-tasks-btn');
 
@@ -31,6 +32,7 @@ export const cancelEditTaskBtn = document.querySelector('.cancel-edit-task-btn')
 
 // Error element for forms
 export const errorDisplay = document.querySelector('.error-display');
+export const addErrorDisplay = document.querySelector('.add-error-display');
 
 addTaskForm.addEventListener('submit', e => {
   e.preventDefault();
@@ -46,6 +48,10 @@ addNewTaskBtn.addEventListener('click', () => {
 
 cancelAddTaskBtn.addEventListener('click', () => {
   toggleAddTaskForm.style.display = 'none';
+  addTaskTitleInput.value = '';
+  addTaskDescInput.value = '';
+  addTaskEstPomosInput.value = '';
+  addErrorDisplay.style.display = 'none';
 });
 
 submitAddTaskBtn.addEventListener('click', addTask);
