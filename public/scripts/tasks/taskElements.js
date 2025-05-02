@@ -29,6 +29,9 @@ export const editTaskEstPomosInput = document.querySelector('.edit-task-est-pomo
 export const submitEditTaskBtn = document.querySelector('.submit-edit-task-btn');
 export const cancelEditTaskBtn = document.querySelector('.cancel-edit-task-btn');
 
+// Error element for forms
+export const errorDisplay = document.querySelector('.error-display');
+
 addTaskForm.addEventListener('submit', e => {
   e.preventDefault();
 });

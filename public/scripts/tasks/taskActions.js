@@ -1,5 +1,6 @@
 import { fetchTasks, apiBase } from "./taskStorage.js";
-import { addTaskForm, addTaskTitleInput, addTaskDescInput, addTaskEstPomosInput, toggleAddTaskForm, editTaskDescInput, editTaskEstPomosInput, editTaskForm, editTaskTitleInput, toggleEditTaskForm, submitEditTaskBtn, cancelEditTaskBtn } from "./taskElements.js";
+import { addTaskForm, addTaskTitleInput, addTaskDescInput, addTaskEstPomosInput, toggleAddTaskForm, editTaskDescInput, editTaskEstPomosInput, editTaskForm, editTaskTitleInput, toggleEditTaskForm, submitEditTaskBtn, cancelEditTaskBtn, errorDisplay } from "./taskElements.js";
+import { validateDescription, validateEstimatedPomodoros, validateTitle } from "./taskFormValidation.js";
 import { token } from "../dashboard/dashboardAuth.js";
 
 export async function addTask() {
@@ -8,31 +9,49 @@ export async function addTask() {
   const estimated_pomodoros = addTaskEstPomosInput.value;
 
   // VALIDATION GOES HERE
+  if (
+    validateTitle(title) ||
+    validateDescription(description) ||
+    validateEstimatedPomodoros(estimated_pomodoros)
+  ) {
+    errorDisplay.innerHTML = validateTitle(title) || validateDescription(description) || validateEstimatedPomodoros(estimated_pomodoros);
+    errorDisplay.style.display = 'block';
+    return;
+  }
 
-  // make api post request
-  await fetch(apiBase + 'tasks', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': token
-    },
-    body: JSON.stringify({
-      title,
-      description,
-      estimated_pomodoros
-    })
-  });
+  errorDisplay.style.display = 'none';
 
-  // clear prev form values
-  addTaskTitleInput.value = '';
-  addTaskDescInput.value = '';
-  addTaskEstPomosInput.value = '';
+  try {
+    // make api post request
+    await fetch(apiBase + 'tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        estimated_pomodoros
+      })
+    });
 
-  // close the task form
-  toggleAddTaskForm.style.display = 'none';
+    // clear prev form values
+    addTaskTitleInput.value = '';
+    addTaskDescInput.value = '';
+    addTaskEstPomosInput.value = '';
 
-  // call function to get and render tasks
-  fetchTasks();
+    // close the task form
+    toggleAddTaskForm.style.display = 'none';
+
+    // call function to get and render tasks
+    fetchTasks();
+  }
+  catch (err) {
+    console.log(err);
+    errorDisplay.innerHTML = 'Failed to update task';
+    errorDisplay.style.display = 'block';
+  }
 }
 
 export async function editTask(index, title_, desc_, estPomos_) {
@@ -46,37 +65,55 @@ export async function editTask(index, title_, desc_, estPomos_) {
 
   async function confirmEditTask() {
 
-    // VALIDATION GOES HERE
-
     // Get new task values
     const title = editTaskTitleInput.value;
     const description = editTaskDescInput.value;
     const estimated_pomodoros = editTaskEstPomosInput.value;
 
-    // Make api put request
-    await fetch(`${apiBase}tasks/edit/${index}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        estimated_pomodoros
-      })
-    });
+    // VALIDATION GOES HERE
+    if (
+      validateTitle(title) ||
+      validateDescription(description) ||
+      validateEstimatedPomodoros(estimated_pomodoros)
+    ) {
+      errorDisplay.innerHTML = validateTitle(title) || validateDescription(description) || validateEstimatedPomodoros(estimated_pomodoros);
+      errorDisplay.style.display = 'block';
+      return;
+    }
+  
+    errorDisplay.style.display = 'none';
 
-    // Clear prev form values
-    editTaskTitleInput.value = '';
-    editTaskDescInput.value = '';
-    editTaskEstPomosInput.value = '';
+    try {
+      // Make api put request
+      await fetch(`${apiBase}tasks/edit/${index}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          estimated_pomodoros
+        })
+      });
 
-    // close the task form
-    toggleEditTaskForm.style.display = 'none';
+      // Clear prev form values
+      editTaskTitleInput.value = '';
+      editTaskDescInput.value = '';
+      editTaskEstPomosInput.value = '';
 
-    // Call function to get and render tasks
-    fetchTasks();
+      // close the task form
+      toggleEditTaskForm.style.display = 'none';
+
+      // Call function to get and render tasks
+      fetchTasks();
+    }
+    catch (err) {
+      console.log(err);
+      errorDisplay.innerHTML = 'Failed to update task';
+      errorDisplay.style.display = 'block';
+    }
   }
 
   submitEditTaskBtn.onclick = confirmEditTask;

@@ -95,8 +95,9 @@
 }
 
 .error-display {
-  text-align: left;
+  text-align: center;
   font-style: italic;
+  padding-top: 1rem;
 }
 
 .add-task-form-btns, .edit-task-form-btns {
