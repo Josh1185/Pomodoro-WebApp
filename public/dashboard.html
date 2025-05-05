@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="styles/timer.css">
   <link rel="stylesheet" href="styles/task.css">
   <link rel="stylesheet" href="styles/taskForms.css">
+  <link rel="stylesheet" href="styles/modals.css">
 </head>
 <body>
   <header>
@@ -152,6 +153,62 @@
             </button>
           </div>
         </form>
+      </div>
+
+      <div class="delete-task-modal-wrapper">
+        <div class="delete-task-modal">
+          <h5 class="delete-task-modal-title">Are you sure you would like to delete this task?</h5>
+          <div class="modal-buttons">
+            <button class="confirm-delete-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+              Confirm</button>
+            <button class="cancel-delete-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+              Cancel</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="complete-task-modal-wrapper">
+        <div class="complete-task-modal">
+          <h5 class="complete-task-modal-title">Are you sure you would like to mark this task complete?</h5>
+          <div class="modal-buttons">
+            <button class="confirm-complete-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+              Confirm</button>
+            <button class="cancel-complete-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+              Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pincurrent-task-modal-wrapper">
+        <div class="pincurrent-task-modal">
+          <h5 class="pincurrent-task-modal-title">Are you sure you would like to pin this task to your current slot?</h5>
+          <div class="modal-buttons">
+            <button class="confirm-pincurrent-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+              Confirm</button>
+            <button class="cancel-pincurrent-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+              Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="unpincurrent-task-modal-wrapper">
+        <div class="unpincurrent-task-modal">
+          <h5 class="unpincurrent-task-modal-title">Are you sure you would like to unpin this task from your current slot?</h5>
+          <div class="modal-buttons">
+            <button class="confirm-unpincurrent-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+              Confirm</button>
+            <button class="cancel-unpincurrent-task-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+              Cancel</button>
+          </div>
+        </div>
       </div>
 
       <div class="tasks-container">

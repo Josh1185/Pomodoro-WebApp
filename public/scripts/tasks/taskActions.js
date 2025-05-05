@@ -2,6 +2,7 @@ import { fetchTasks, apiBase } from "./taskStorage.js";
 import { addTaskForm, addTaskTitleInput, addTaskDescInput, addTaskEstPomosInput, toggleAddTaskForm, editTaskDescInput, editTaskEstPomosInput, editTaskForm, editTaskTitleInput, toggleEditTaskForm, submitEditTaskBtn, cancelEditTaskBtn, errorDisplay, addErrorDisplay } from "./taskElements.js";
 import { validateDescription, validateEstimatedPomodoros, validateTitle } from "./taskFormValidation.js";
 import { token } from "../dashboard/dashboardAuth.js";
+import { deleteTaskModalTitle, deleteTaskModalWrapper, confirmDeleteTaskBtn, cancelDeleteTaskBtn, closeModal, openModal, completeTaskModalTitle, completeTaskModalWrapper, confirmCompleteTaskBtn, cancelCompleteTaskBtn, pincurrentTaskModalTitle, pincurrentTaskModalWrapper, confirmPincurrentTaskBtn, cancelPincurrentTaskBtn, unpincurrentTaskModalTitle, unpincurrentTaskModalWrapper, confirmUnpincurrentTaskBtn, cancelUnpincurrentTaskBtn } from "../dashboard/dashboardModals.js";
 
 export async function addTask() {
   const title = addTaskTitleInput.value;
@@ -141,112 +142,172 @@ export async function editTask(id, title_, desc_, estPomos_) {
   }
 }
 
-export async function deleteTask(id) {
-  try {
-    // Make api delete request
-    const response = await fetch(`${apiBase}tasks/delete/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
+export async function deleteTask(id, title) {
+
+  openModal(deleteTaskModalWrapper);
+  deleteTaskModalTitle.textContent = `Are you sure you want to delete ${title}?`;
+  confirmDeleteTaskBtn.addEventListener('click', confirmDeleteTask);
+  cancelDeleteTaskBtn.addEventListener('click', closeFunction);
+
+  function closeFunction() {
+    closeModal(deleteTaskModalWrapper, confirmDeleteTaskBtn, cancelDeleteTaskBtn, confirmDeleteTask, closeFunction);
+  }
+
+  async function confirmDeleteTask() {
+    try {
+      // Make api delete request
+      const response = await fetch(`${apiBase}tasks/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+  
+      // Check for an ok response
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete task');
       }
-    });
-
-    // Check for an ok response
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to delete task');
+  
+      // Fetch tasks
+      fetchTasks();
     }
+    catch (err) {
+      console.log('Error deleting task: ', err);
+    }
+    finally {
+      closeFunction();
+    }
+  } 
+}
 
-    // Fetch tasks
-    fetchTasks();
+export async function markTaskComplete(id, title) {
+
+  openModal(completeTaskModalWrapper);
+  completeTaskModalTitle.textContent = `Are you sure you would like to mark ${title} as complete?`;
+  confirmCompleteTaskBtn.addEventListener('click', confirmCompleteTask);
+  cancelCompleteTaskBtn.addEventListener('click', closeFunction);
+
+  function closeFunction() {
+    closeModal(completeTaskModalWrapper, confirmCompleteTaskBtn, cancelCompleteTaskBtn, confirmCompleteTask, closeFunction);
   }
-  catch (err) {
-    console.log('Error deleting task: ', err);
+
+  async function confirmCompleteTask() {
+    try {
+      // Make api put request
+      const response = await fetch(`${apiBase}tasks/complete/${id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          is_completed: true,
+          is_current: false
+        })
+      });
+  
+      // Check for an ok response
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to mark task complete');
+      }
+  
+      // Fetch tasks
+      fetchTasks();
+    }
+    catch (err) {
+      console.log('Error marking task complete: ', err);
+    }
+    finally {
+      closeFunction();
+    }
   }
 }
 
-export async function markTaskComplete(id) {
-  try {
-    // Make api put request
-    const response = await fetch(`${apiBase}tasks/complete/${id}`, {
-      method: "PUT",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({
-        is_completed: true,
-        is_current: false
-      })
-    });
+export async function pinTaskAsCurrent(id, title) {
 
-    // Check for an ok response
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to mark task complete');
-    }
+  openModal(pincurrentTaskModalWrapper);
+  pincurrentTaskModalTitle.textContent = `Are you sure you would like to pin ${title} as your current task?`;
+  confirmPincurrentTaskBtn.addEventListener('click', confirmPinCurrent);
+  cancelPincurrentTaskBtn.addEventListener('click', closeFunction);
 
-    // Fetch tasks
-    fetchTasks();
+  function closeFunction() {
+    closeModal(pincurrentTaskModalWrapper, confirmPincurrentTaskBtn, cancelPincurrentTaskBtn, confirmPinCurrent, closeFunction);
   }
-  catch (err) {
-    console.log('Error marking task complete: ', err);
+
+  async function confirmPinCurrent() {
+    try {
+      // Make api put request
+      const response = await fetch(`${apiBase}tasks/current/pin/${id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          is_current: true
+        })
+      });
+  
+      // Check for an ok response
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to pin task');
+      }
+  
+      // Fetch tasks
+      fetchTasks();
+    }
+    catch (err) {
+      console.log('Error pinning task: ', err);
+    }
+    finally {
+      closeFunction();
+    }
   }
 }
 
-export async function pinTaskAsCurrent(id) {
-  try {
-    // Make api put request
-    const response = await fetch(`${apiBase}tasks/current/pin/${id}`, {
-      method: "PUT",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({
-        is_current: true
-      })
-    });
+export async function unpinCurrentTask(id, title) {
 
-    // Check for an ok response
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to pin task');
+  openModal(unpincurrentTaskModalWrapper);
+  unpincurrentTaskModalTitle.textContent = `Are you sure you would like to unpin ${title} from your current task slot?`;
+  confirmUnpincurrentTaskBtn.addEventListener('click', confirmUnpinCurrent);
+  cancelUnpincurrentTaskBtn.addEventListener('click', closeFunction);
+
+  function closeFunction() {
+    closeModal(unpincurrentTaskModalWrapper, confirmUnpincurrentTaskBtn, cancelUnpincurrentTaskBtn, confirmUnpinCurrent, closeFunction);
+  }
+
+  async function confirmUnpinCurrent() {
+    try {
+      // Make api put request
+      const response = await fetch(`${apiBase}tasks/current/unpin/${id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          is_current: false
+        })
+      });
+  
+      // Check for an ok response
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to unpin task');
+      }
+  
+      // Fetch tasks
+      fetchTasks();
     }
-
-    // Fetch tasks
-    fetchTasks();
-  }
-  catch (err) {
-    console.log('Error pinning task: ', err);
-  }
-}
-
-export async function unpinCurrentTask(id) {
-  try {
-    // Make api put request
-    const response = await fetch(`${apiBase}tasks/current/unpin/${id}`, {
-      method: "PUT",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token
-      },
-      body: JSON.stringify({
-        is_current: false
-      })
-    });
-
-    // Check for an ok response
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to unpin task');
+    catch (err) {
+      console.log('Error unpinning task: ', err);
     }
-
-    // Fetch tasks
-    fetchTasks();
-  }
-  catch (err) {
-    console.log('Error unpinning task: ', err);
+    finally {
+      closeFunction();
+    }
   }
 }

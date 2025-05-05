@@ -62,7 +62,8 @@ export function renderTasks(tasks) {
     const taskId = deleteTaskBtn.dataset.id;
 
     deleteTaskBtn.addEventListener('click', () => {
-      deleteTask(taskId);
+      const title = document.querySelector(`.task-title-${taskId}`).value;
+      deleteTask(taskId, title);
     });
   });
 
@@ -71,7 +72,8 @@ export function renderTasks(tasks) {
     const taskId = markCompleteBtn.dataset.id;
 
     markCompleteBtn.addEventListener('click', () => {
-      markTaskComplete(taskId);
+      const title = document.querySelector(`.task-title-${taskId}`).value;
+      markTaskComplete(taskId, title);
     });
   });
 
@@ -81,11 +83,12 @@ export function renderTasks(tasks) {
 
     section.addEventListener('click', () => {
       const isCurrent = document.querySelector(`.task-is-current-${taskId}`).value;
+      const title = document.querySelector(`.task-title-${taskId}`).value;
       if (isCurrent === 'true') {
-        unpinCurrentTask(taskId);
+        unpinCurrentTask(taskId, title);
       }
       else {
-        pinTaskAsCurrent(taskId);
+        pinTaskAsCurrent(taskId, title);
       }
     });
   });
