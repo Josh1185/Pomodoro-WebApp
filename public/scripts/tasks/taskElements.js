@@ -1,4 +1,4 @@
-import { addTask } from "./taskActions.js";
+import { addTask, clearTaskList } from "./taskActions.js";
 import { renderTasks } from "./taskRendering.js";
 import { allTasks, fetchTasks, completedTasks, incompletedTasks } from "./taskStorage.js";
 
@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
   editTaskForm.addEventListener('submit', e => {
     e.preventDefault();
   });
+
+  // Clear task list button
+  clearAllTasksBtn.addEventListener('click', clearTaskList);
 
   // Add task buttons
   addNewTaskBtn.addEventListener('click', () => {

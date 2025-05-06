@@ -8,19 +8,20 @@
 }
 
 :root {
-  /* Light Mode */
+  /* Light Mode
   --background-color-1: #ffffff;
   --background-color-2: #e2e2e2;
   --text-color: #000000;
   --accent-color: #f66262;
+  --font-color: #000000;
+  */
   
-  
-  /* Dark Mode 
+  /* Dark Mode */
   --background-color-1: #1a1a1a;
-  --background-color-2: #202020;
+  --background-color-2: #252525;
   --text-color: #ffffff;
   --accent-color: #f66262;
-  */
+  --font-color: #ffffff;
   
   /* colors 
 
@@ -73,6 +74,7 @@ label, input {
 button {
   font-size: clamp(1.4rem, 1.6vw, 1.6rem);
   font-weight: 300;
+  color: var(--text-color);
 }
 
 /* Links */

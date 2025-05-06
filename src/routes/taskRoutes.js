@@ -21,42 +21,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get all of a logged in user's completed tasks
-router.get('/completed', async (req, res) => {
-  try {
-    const getCompletedTasks = `
-      SELECT * FROM tasks
-      WHERE user_id = $1 and is_completed = true
-    `;
-    const values = [req.userId];
-    const result = await pool.query(getCompletedTasks, values);
-    const taskList = result.rows;
-    res.json(taskList);
-  }
-  catch (err) {
-    console.log(err);
-    res.status(500).json({ error: 'Failed to fetch tasks' });
-  }
-});
-
-// Get a logged in user's current task
-router.get('/current', async (req, res) => {
-  try {
-    const getCompletedTasks = `
-      SELECT * FROM tasks
-      WHERE user_id = $1 and is_current = true
-    `;
-    const values = [req.userId];
-    const result = await pool.query(getCompletedTasks, values);
-    const taskList = result.rows;
-    res.json(taskList);
-  }
-  catch (err) {
-    console.log(err);
-    res.status(500).json({ error: 'Failed to fetch tasks' });
-  }
-});
-
 // Add a new task to the list
 router.post('/', async (req, res) => {
   try {
@@ -265,6 +229,32 @@ router.put('/current/unpin/:id', async (req, res) => {
   }
   catch (err) {
     console.log("Error unpinning task as current: ", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// clear all tasks
+router.delete('/', async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const clearTasks = `
+      DELETE FROM tasks
+      WHERE user_id = $1 AND is_completed = false
+      RETURNING *
+    `;
+    const values = [userId];
+
+    const result = await pool.query(clearTasks, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "No tasks found or not authorized" });
+    }
+
+    res.json({ message: "Task list cleared successfully" });
+  }
+  catch (err) {
+    console.log("Error clearing task list: ", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });

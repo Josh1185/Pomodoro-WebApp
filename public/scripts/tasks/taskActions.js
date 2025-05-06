@@ -2,7 +2,7 @@ import { fetchTasks, apiBase } from "./taskStorage.js";
 import { addTaskForm, addTaskTitleInput, addTaskDescInput, addTaskEstPomosInput, toggleAddTaskForm, editTaskDescInput, editTaskEstPomosInput, editTaskForm, editTaskTitleInput, toggleEditTaskForm, submitEditTaskBtn, cancelEditTaskBtn, errorDisplay, addErrorDisplay } from "./taskElements.js";
 import { validateDescription, validateEstimatedPomodoros, validateTitle } from "./taskFormValidation.js";
 import { token } from "../dashboard/dashboardAuth.js";
-import { deleteTaskModalTitle, deleteTaskModalWrapper, confirmDeleteTaskBtn, cancelDeleteTaskBtn, closeModal, openModal, completeTaskModalTitle, completeTaskModalWrapper, confirmCompleteTaskBtn, cancelCompleteTaskBtn, pincurrentTaskModalTitle, pincurrentTaskModalWrapper, confirmPincurrentTaskBtn, cancelPincurrentTaskBtn, unpincurrentTaskModalTitle, unpincurrentTaskModalWrapper, confirmUnpincurrentTaskBtn, cancelUnpincurrentTaskBtn } from "../dashboard/dashboardModals.js";
+import { deleteTaskModalTitle, deleteTaskModalWrapper, confirmDeleteTaskBtn, cancelDeleteTaskBtn, closeModal, openModal, completeTaskModalTitle, completeTaskModalWrapper, confirmCompleteTaskBtn, cancelCompleteTaskBtn, pincurrentTaskModalTitle, pincurrentTaskModalWrapper, confirmPincurrentTaskBtn, cancelPincurrentTaskBtn, unpincurrentTaskModalTitle, unpincurrentTaskModalWrapper, confirmUnpincurrentTaskBtn, cancelUnpincurrentTaskBtn, clearTasksModalTitle, clearTasksModalWrapper, confirmClearTasksBtn, cancelClearTasksBtn } from "../dashboard/dashboardModals.js";
 
 export async function addTask() {
   const title = addTaskTitleInput.value;
@@ -146,8 +146,8 @@ export async function deleteTask(id, title) {
 
   openModal(deleteTaskModalWrapper);
   deleteTaskModalTitle.textContent = `Are you sure you want to delete ${title}?`;
-  confirmDeleteTaskBtn.addEventListener('click', confirmDeleteTask);
-  cancelDeleteTaskBtn.addEventListener('click', closeFunction);
+  confirmDeleteTaskBtn.addEventListener('click', confirmDeleteTask, { once: true });
+  cancelDeleteTaskBtn.addEventListener('click', closeFunction, { once: true });
 
   function closeFunction() {
     closeModal(deleteTaskModalWrapper, confirmDeleteTaskBtn, cancelDeleteTaskBtn, confirmDeleteTask, closeFunction);
@@ -186,8 +186,8 @@ export async function markTaskComplete(id, title) {
 
   openModal(completeTaskModalWrapper);
   completeTaskModalTitle.textContent = `Are you sure you would like to mark ${title} as complete?`;
-  confirmCompleteTaskBtn.addEventListener('click', confirmCompleteTask);
-  cancelCompleteTaskBtn.addEventListener('click', closeFunction);
+  confirmCompleteTaskBtn.addEventListener('click', confirmCompleteTask, { once: true });
+  cancelCompleteTaskBtn.addEventListener('click', closeFunction, { once: true });
 
   function closeFunction() {
     closeModal(completeTaskModalWrapper, confirmCompleteTaskBtn, cancelCompleteTaskBtn, confirmCompleteTask, closeFunction);
@@ -230,8 +230,8 @@ export async function pinTaskAsCurrent(id, title) {
 
   openModal(pincurrentTaskModalWrapper);
   pincurrentTaskModalTitle.textContent = `Are you sure you would like to pin ${title} as your current task?`;
-  confirmPincurrentTaskBtn.addEventListener('click', confirmPinCurrent);
-  cancelPincurrentTaskBtn.addEventListener('click', closeFunction);
+  confirmPincurrentTaskBtn.addEventListener('click', confirmPinCurrent, { once: true });
+  cancelPincurrentTaskBtn.addEventListener('click', closeFunction, { once: true });
 
   function closeFunction() {
     closeModal(pincurrentTaskModalWrapper, confirmPincurrentTaskBtn, cancelPincurrentTaskBtn, confirmPinCurrent, closeFunction);
@@ -273,8 +273,8 @@ export async function unpinCurrentTask(id, title) {
 
   openModal(unpincurrentTaskModalWrapper);
   unpincurrentTaskModalTitle.textContent = `Are you sure you would like to unpin ${title} from your current task slot?`;
-  confirmUnpincurrentTaskBtn.addEventListener('click', confirmUnpinCurrent);
-  cancelUnpincurrentTaskBtn.addEventListener('click', closeFunction);
+  confirmUnpincurrentTaskBtn.addEventListener('click', confirmUnpinCurrent, { once: true });
+  cancelUnpincurrentTaskBtn.addEventListener('click', closeFunction, { once: true });
 
   function closeFunction() {
     closeModal(unpincurrentTaskModalWrapper, confirmUnpincurrentTaskBtn, cancelUnpincurrentTaskBtn, confirmUnpinCurrent, closeFunction);
@@ -305,6 +305,45 @@ export async function unpinCurrentTask(id, title) {
     }
     catch (err) {
       console.log('Error unpinning task: ', err);
+    }
+    finally {
+      closeFunction();
+    }
+  }
+}
+
+export async function clearTaskList() {
+  openModal(clearTasksModalWrapper);
+  clearTasksModalTitle.textContent = `Are you sure you would like to clear your task list?`;
+  confirmClearTasksBtn.addEventListener('click', confirmClearTaskList, { once: true });
+  cancelClearTasksBtn.addEventListener('click', closeFunction, { once: true });
+
+  function closeFunction() {
+    closeModal(clearTasksModalWrapper, confirmClearTasksBtn, cancelClearTasksBtn, confirmClearTaskList, closeFunction);
+  }
+
+  async function confirmClearTaskList() {
+    try {
+      // Make api request
+      const response = await fetch(`${apiBase}tasks`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+
+      // Check for an ok response
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to clear task list');
+      }
+  
+      // Fetch tasks
+      fetchTasks();
+    }
+    catch (err) {
+      console.log('Error clearing task list: ', err);
     }
     finally {
       closeFunction();

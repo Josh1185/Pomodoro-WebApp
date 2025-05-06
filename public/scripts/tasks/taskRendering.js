@@ -13,7 +13,7 @@ export function renderTasks(tasks) {
     if (a.is_completed && b.is_completed) {
       const completedA = new Date(a.completed_at);
       const completedB = new Date(b.completed_at);
-      return completedA - completedB; // Sorts in ascending order
+      return completedB - completedA; // Sorts in descending order
     }
 
     // Current comes first 

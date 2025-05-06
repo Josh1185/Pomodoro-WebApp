@@ -22,6 +22,12 @@ export const unpincurrentTaskModalTitle = document.querySelector('.unpincurrent-
 export const confirmUnpincurrentTaskBtn = document.querySelector('.confirm-unpincurrent-task-btn');
 export const cancelUnpincurrentTaskBtn = document.querySelector('.cancel-unpincurrent-task-btn');
 
+// Clear tasks modal
+export const clearTasksModalWrapper = document.querySelector('.clear-tasks-modal-wrapper');
+export const clearTasksModalTitle = document.querySelector('.clear-tasks-modal-title');
+export const confirmClearTasksBtn = document.querySelector('.confirm-clear-tasks-btn');
+export const cancelClearTasksBtn = document.querySelector('.cancel-clear-tasks-btn');
+
 // Reusable functions to close/open a modal and remove event listeners
 export function closeModal(modal, confirmBtn, cancelBtn, confirmFunction, cancelFunction) {
   modal.style.display = 'none';

@@ -1,11 +1,12 @@
 .delete-task-modal-wrapper, 
 .complete-task-modal-wrapper,
 .pincurrent-task-modal-wrapper,
-.unpincurrent-task-modal-wrapper {
+.unpincurrent-task-modal-wrapper,
+.clear-tasks-modal-wrapper {
   position: fixed;
   z-index: 200;
   background-color: rgba(0, 0, 0, 0.27);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
   width: 100%;
   height: 100%;
   top: 0;
@@ -17,7 +18,8 @@
 .delete-task-modal,
 .complete-task-modal,
 .pincurrent-task-modal,
-.unpincurrent-task-modal {
+.unpincurrent-task-modal,
+.clear-tasks-modal {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -37,7 +39,8 @@
 .delete-task-modal-title,
 .complete-task-modal-title,
 .pincurrent-task-modal-title,
-.unpincurrent-task-modal-title {
+.unpincurrent-task-modal-title,
+.clear-tasks-modal-title {
   text-align: center;
   padding: 20px;
   margin: 0;
