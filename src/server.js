@@ -35,7 +35,8 @@ async function initDb() {
         estimated_pomodoros INTEGER DEFAULT 1,
         is_current BOOLEAN DEFAULT false,
         is_completed BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        completed_at TIMESTAMP DEFAULT NULL
       );
     `);
     console.log('DB successfully initialized');

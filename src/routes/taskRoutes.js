@@ -168,7 +168,8 @@ router.put('/complete/:id', async (req, res) => {
     const markTaskComplete = `
       UPDATE tasks
       SET is_completed = $1,
-          is_current = $2
+          is_current = $2,
+          completed_at = NOW()
       WHERE id = $3 and user_id = $4
       RETURNING *
     `;

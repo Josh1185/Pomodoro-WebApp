@@ -1,4 +1,6 @@
 import { addTask } from "./taskActions.js";
+import { renderTasks } from "./taskRendering.js";
+import { allTasks, fetchTasks, completedTasks, incompletedTasks } from "./taskStorage.js";
 
 // Task List Elements
 export const tasksContainer = document.querySelector('.task-list');
@@ -34,24 +36,50 @@ export const cancelEditTaskBtn = document.querySelector('.cancel-edit-task-btn')
 export const errorDisplay = document.querySelector('.error-display');
 export const addErrorDisplay = document.querySelector('.add-error-display');
 
-addTaskForm.addEventListener('submit', e => {
-  e.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Prevent default form behavior
+  addTaskForm.addEventListener('submit', e => {
+    e.preventDefault();
+  });
+
+  editTaskForm.addEventListener('submit', e => {
+    e.preventDefault();
+  });
+
+  // Add task buttons
+  addNewTaskBtn.addEventListener('click', () => {
+    toggleAddTaskForm.style.display = 'block';
+  });
+
+  cancelAddTaskBtn.addEventListener('click', () => {
+    toggleAddTaskForm.style.display = 'none';
+    addTaskTitleInput.value = '';
+    addTaskDescInput.value = '';
+    addTaskEstPomosInput.value = '';
+    addErrorDisplay.style.display = 'none';
+  });
+
+  submitAddTaskBtn.addEventListener('click', addTask);
+
+  // Filtering logic
+  showIncompletedTasksBtn.addEventListener('click', () => {
+    showCompletedTasksBtn.classList.remove('active');
+    showIncompletedTasksBtn.classList.add('active');
+    taskListOptions.style.display = 'flex';
+
+    // Filter incomplete tasks
+    renderTasks(incompletedTasks);
+  });
+
+  showCompletedTasksBtn.addEventListener('click', () => {
+    showCompletedTasksBtn.classList.add('active');
+    showIncompletedTasksBtn.classList.remove('active');
+    taskListOptions.style.display = 'none';
+
+    // Filter incomplete tasks
+    renderTasks(completedTasks);
+  });
 });
 
-editTaskForm.addEventListener('submit', e => {
-  e.preventDefault();
-});
 
-addNewTaskBtn.addEventListener('click', () => {
-  toggleAddTaskForm.style.display = 'block';
-});
-
-cancelAddTaskBtn.addEventListener('click', () => {
-  toggleAddTaskForm.style.display = 'none';
-  addTaskTitleInput.value = '';
-  addTaskDescInput.value = '';
-  addTaskEstPomosInput.value = '';
-  addErrorDisplay.style.display = 'none';
-});
-
-submitAddTaskBtn.addEventListener('click', addTask);

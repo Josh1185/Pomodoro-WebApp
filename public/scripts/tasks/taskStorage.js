@@ -1,8 +1,11 @@
 import { renderTasks } from "./taskRendering.js";
 import { token } from "../dashboard/dashboardAuth.js";
+import { showCompletedTasksBtn, showIncompletedTasksBtn } from "./taskElements.js";
 
 export const apiBase = '/';
-let tasks = [];
+export let allTasks = [];
+export let completedTasks = [];
+export let incompletedTasks = [];
 
 export async function fetchTasks() {
   try {
@@ -15,8 +18,18 @@ export async function fetchTasks() {
       throw new Error(errorData.error || 'Failed to fetch task data');
     }
     const tasksData = await response.json();
-    tasks = tasksData;
-    renderTasks(tasks);
+    allTasks = tasksData;
+
+    // Filtering
+    completedTasks = allTasks.filter(task => task.is_completed);
+    incompletedTasks = allTasks.filter(task => !task.is_completed);
+
+    if (showCompletedTasksBtn.classList.contains('active')) {
+      renderTasks(completedTasks);
+    }
+    else if (showIncompletedTasksBtn.classList.contains('active')) {
+      renderTasks(incompletedTasks);
+    }
   }
   catch (err) {
     console.log('Failed to fetch task data', err)
