@@ -1,26 +1,11 @@
-
-let timerContainer, timerDisplay, progressBar, currentTimerStepMsg, startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, shortBreakStepBtn, longBreakStepBtn;
-
-  timerContainer = document.querySelector('.timer-container');
-  timerDisplay = document.querySelector('.timer');
-  progressBar = document.querySelector('.circle-bar');
-  currentTimerStepMsg = document.querySelector('.current-timer-step-msg');
-  startTimerBtn = document.querySelector('.start-timer-btn');
-  pauseTimerBtn = document.querySelector('.pause-timer-btn');
-  skipTimerBtn = document.querySelector('.skip-timer-btn');
-  pomodoroStepBtn = document.querySelector('.pomo-btn');
-  shortBreakStepBtn = document.querySelector('.short-break-btn');
-  longBreakStepBtn = document.querySelector('.long-break-btn');
-
-export {
-  timerContainer,
-  timerDisplay,
-  progressBar,
-  currentTimerStepMsg,
-  startTimerBtn,
-  pauseTimerBtn,
-  skipTimerBtn,
-  pomodoroStepBtn,
-  shortBreakStepBtn,
-  longBreakStepBtn
-};
+export const timerContainer = document.querySelector('.timer-container');
+export const timerDisplay = document.querySelector('.timer');
+export const progressBar = document.querySelector('.circle-bar');
+export const currentTimerStepMsg = document.querySelector('.current-timer-step-msg');
+export const startTimerBtn = document.querySelector('.start-timer-btn');
+export const pauseTimerBtn = document.querySelector('.pause-timer-btn');
+export const skipTimerBtn = document.querySelector('.skip-timer-btn');
+export const pomodoroStepBtn = document.querySelector('.pomo-btn');
+export const shortBreakStepBtn = document.querySelector('.short-break-btn');
+export const longBreakStepBtn = document.querySelector('.long-break-btn');
+export const currentTaskCircleContainer = document.querySelector('.current-task-circle-container');

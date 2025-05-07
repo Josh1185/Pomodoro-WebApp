@@ -35,3 +35,7 @@ export async function fetchTasks() {
     console.log('Failed to fetch task data', err)
   }
 }
+
+export function getCurrentTask() { // Using for timer page
+  return allTasks.find(task => task.is_current === true) || null;
+}

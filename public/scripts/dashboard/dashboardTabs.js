@@ -1,4 +1,7 @@
 import { logoutUser } from "../authentication/user-logout.js";
+import { fetchTasks } from "../tasks/taskStorage.js";
+import { initializeTimer } from "../timer/timerLogic.js";
+import { showCurrentTaskOnTimerPage } from "../timer/timerState.js";
 
 // Logout functionality
 const logoutBtn = document.querySelector('.logout-btn');
@@ -8,7 +11,7 @@ logoutBtn.addEventListener('click', () => {
 
 // Tab functionality
 window.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.tasks-tab').click();
+  document.querySelector('.timer-tab').click();
 });
 
 const timerTab = document.querySelector('.tab-btn.timer-tab');
@@ -66,13 +69,15 @@ function changeTab(tab) {
 }
 
 function renderTimerPage() {
+  showCurrentTaskOnTimerPage();
   timerWrapper.style.display = "flex";
   tasksWrapper.style.display = "none";
   statsWrapper.style.display = "none";
   settingsWrapper.style.display = "none";
 }
 
-function renderTasksPage() {
+async function renderTasksPage() {
+  await fetchTasks();
   timerWrapper.style.display = "none";
   tasksWrapper.style.display = "flex";
   statsWrapper.style.display = "none";

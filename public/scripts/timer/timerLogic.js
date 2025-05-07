@@ -1,12 +1,14 @@
-import { timerState, getMinutes, setMinutes } from "./timerState.js";
-import { timerDisplay, startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, shortBreakStepBtn, longBreakStepBtn, currentTimerStepMsg, progressBar, timerContainer } from "./timerElements.js";
+import { timerState, getMinutes, setMinutes, showCurrentTaskOnTimerPage } from "./timerState.js";
+import { timerDisplay, startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, shortBreakStepBtn, longBreakStepBtn, currentTimerStepMsg, progressBar, timerContainer, currentTaskCircleContainer } from "./timerElements.js";
 import { deactivatePrevStepBtn } from "./timerEvents.js";
+import { updatePomodoroProgress } from "./timerTaskProgress.js";
 
 let startingMins = getMinutes('pomo');
 let time = (startingMins * 60) - 1;
 let progressDegrees = 0;
 
 export function initializeTimer(mins) {
+
   timerState.timerRunning = false;
   clearInterval(timerState.intervalId);
   startingMins = mins;
@@ -23,6 +25,8 @@ export function initializeTimer(mins) {
   startTimerBtn.style.display = 'flex';
   pauseTimerBtn.style.display = 'none';
   displayTimerStep();
+
+  showCurrentTaskOnTimerPage();
 }
 
 function updateTimerDisplay() {
@@ -100,7 +104,9 @@ export function timerEnds() {
         timerState.pomodoroStepIndex++;
         timerState.currentStep = 'sb';
         shortBreakStepBtn.classList.add('active');
-        // DO LATER: UPDATE POMODORO PROGRESS ON TASK
+
+        // UPDATE POMODORO PROGRESS ON TASK
+        updatePomodoroProgress();
 
         // Initialize timer
         deactivatePrevStepBtn(timerState.currentStep);
@@ -113,7 +119,9 @@ export function timerEnds() {
         longBreakStepBtn.classList.add('active');
         timerState.pomodoroStepIndex = 1;
         timerState.shortBreakStepIndex = 1;
-        // DO LATER: UPDATE POMODORO PROGRESS ON TASK
+
+        // UPDATE POMODORO PROGRESS ON TASK
+        updatePomodoroProgress();
 
         // Initialize timer
         deactivatePrevStepBtn(timerState.currentStep);

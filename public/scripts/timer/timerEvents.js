@@ -1,11 +1,6 @@
 import { timerState, getMinutes, setMinutes } from "./timerState.js";
 import { startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, longBreakStepBtn, shortBreakStepBtn } from "./timerElements.js";
 import { initializeTimer, startTimer, timerEnds } from "./timerLogic.js";
-
-
-  document.addEventListener('DOMContentLoaded', () => {
-    initializeTimer(getMinutes('pomo'));
-  });
   
   pomodoroStepBtn.addEventListener('click', () => {
     timerState.currentStep = "pomodoro";

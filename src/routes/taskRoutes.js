@@ -58,6 +58,35 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Update completed pomodoros /pomos/:id
+router.put('/pomos/:id', async (req, res) => {
+  try {
+    const { completed_pomodoros } = req.body;
+    const taskId = req.params.id;
+    const userId = req.userId;
+
+    const updatePomos = `
+      UPDATE tasks
+      SET completed_pomodoros = $1
+      WHERE id = $2 AND user_id = $3 AND is_current = true
+      RETURNING *
+    `;
+    const values = [completed_pomodoros, taskId, userId];
+
+    const result = await pool.query(updatePomos, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Task not found or not authorized" });
+    }
+
+    res.json({ message: "Current task completed_pomodoros updated successfully" });
+  }
+  catch (err) {
+    console.log("Error updating current task completed_pomodoros: ", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Edit a task  PUT /edit/:id
 router.put('/edit/:id', async (req, res) => {
   try {

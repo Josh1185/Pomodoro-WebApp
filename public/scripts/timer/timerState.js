@@ -1,3 +1,5 @@
+import { getCurrentTask, fetchTasks } from "../tasks/taskStorage.js";
+import { currentTaskCircleContainer } from "./timerElements.js";
 
 export const timerState = {
   currentStep: "pomodoro",
@@ -31,5 +33,26 @@ export function setMinutes(type, amt) {
       SHORT_BREAK_MINUTES = amt;
     case "lb":
       LONG_BREAK_MINUTES = amt;
+  }
+}
+
+export async function showCurrentTaskOnTimerPage() {
+  await fetchTasks();
+  // Display current task progress if there is one
+  const currentTask = getCurrentTask();
+  if (currentTask) {
+    currentTaskCircleContainer.innerHTML = `
+      <div class="task-progress-bar" style="
+        background: conic-gradient(
+          var(--accent-color) ${(currentTask.completed_pomodoros / currentTask.estimated_pomodoros) * 360}deg,
+          var(--background-color-2) 0deg
+        );
+      ">
+        <span class="task-progress">${currentTask.completed_pomodoros}/${currentTask.estimated_pomodoros}</span>
+      </div>
+    `;
+  }
+  else {
+    currentTaskCircleContainer.innerHTML = '';
   }
 }

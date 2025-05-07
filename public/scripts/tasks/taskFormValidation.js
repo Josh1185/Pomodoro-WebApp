@@ -42,6 +42,9 @@ export function validateEstimatedPomodoros(field) {
   ) {
     return `<p>Estimated pomodoros must be a positive integer</p>`;
   }
+  else if (field >= 100) {
+    return `<p>Estimated pomodoros must be under 100</p>`;
+  }
   else {
     return "";
   }
