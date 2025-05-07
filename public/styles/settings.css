@@ -1,0 +1,185 @@
+.settings-wrapper  {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.settings-form {
+  width: 80%;
+  max-width: 450px;
+  background-color: var(--background-color-1);
+  border-radius: 15px;
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.27);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  animation: fadeIn 2s ease;
+}
+
+.timer-settings,
+.theme-settings {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+} 
+
+.settings-header {
+  border-bottom: 2px solid var(--background-color-2);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  gap: 5px;
+}
+
+.settings-header svg {
+  fill: var(--text-color);
+  width: 20px;
+  height: 20px;
+}
+
+.settings-input-box {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.settings-input-box input {
+  background-color: transparent;
+  border: 2px solid var(--background-color-2);
+  border-radius: 15px;
+  outline: none;
+  padding: 1rem;
+  width: 65px;
+  height: 40px;
+}
+
+.theme-selection-box {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.accent-color-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  width: 40px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+}
+.accent-color-input::-webkit-color-swatch {
+  border-radius: 15px;
+  border: 2px solid var(--background-color-2);
+}
+.accent-color-input::-moz-color-swatch {
+  border-radius: 15px;
+  border: 2px solid var(--background-color-2);
+}
+
+.theme-selection-row,
+.accent-color-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-color-2);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--background-color-1);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: var(--accent-color);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--accent-color);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.save-settings-btn {
+  background-color: var(--background-color-1);
+  border: 1px solid var(--accent-color);
+  cursor: pointer;
+  padding: .5rem 1rem;
+  border-radius: 15px;
+  color: var(--accent-color);
+  transition: all 0.15s;
+}
+
+.save-settings-btn:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+@media only screen and (max-width: 600px) {
+  .save-settings-btn {
+    background-color: var(--accent-color);
+    color: #fff;
+  }
+}

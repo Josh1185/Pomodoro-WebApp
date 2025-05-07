@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="styles/task.css">
   <link rel="stylesheet" href="styles/taskForms.css">
   <link rel="stylesheet" href="styles/modals.css">
+  <link rel="stylesheet" href="styles/settings.css">
 </head>
 <body>
   <header>
@@ -252,7 +253,56 @@
     </div>
   
     <div class="settings-wrapper" style="display: none;">
-      settings
+
+      <form class="settings-form">
+        <div class="timer-settings">
+          <h3 class="settings-header">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M360-840v-80h240v80H360Zm80 440h80v-240h-80v240Zm40 320q-74 0-139.5-28.5T226-186q-49-49-77.5-114.5T120-440q0-74 28.5-139.5T226-694q49-49 114.5-77.5T480-800q62 0 119 20t107 58l56-56 56 56-56 56q38 50 58 107t20 119q0 74-28.5 139.5T734-186q-49 49-114.5 77.5T480-80Zm0-80q116 0 198-82t82-198q0-116-82-198t-198-82q-116 0-198 82t-82 198q0 116 82 198t198 82Zm0-280Z"/></svg>
+            Timer
+          </h3>
+          <div class="settings-input-box">
+            <input type="number" class="pomodoro-minutes-input" min="1" max="60" required>
+            <label>Pomodoro Minutes</label>
+          </div>
+          <div class="settings-input-box">
+            <input type="number" class="short-break-minutes-input" min="1" max="60" required>
+            <label>Short Break Minutes</label>
+          </div>
+          <div class="settings-input-box">
+            <input type="number" class="long-break-minutes-input" min="1" max="60" required>
+            <label>Long Break Minutes</label>
+          </div>
+        </div>
+        <div class="theme-settings">
+          <h3 class="settings-header">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm40-83q119-15 199.5-104.5T800-480q0-123-80.5-212.5T520-797v634Z"/></svg>
+            Theme
+          </h3>
+          <div class="theme-selection-box">
+            <div class="theme-selection-row">
+              <p style="margin: 0;">Dark Mode</p>
+              <label class="switch">
+                <input name="theme" type="checkbox" class="dark-mode-toggle">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="theme-selection-row">
+              <p style="margin: 0;">Light Mode</p>
+              <label class="switch">
+                <input name="theme" type="checkbox" class="light-mode-toggle">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          <div class="accent-color-box">
+            <p style="margin: 0;">Accent Color</p>
+            <input type="color" class="accent-color-input" value="#f66262">
+          </div>
+        </div>
+
+        <button class="save-settings-btn">Save</button>
+      </form>
+
     </div>
   </div>
 
@@ -261,5 +311,6 @@
   <script type="module" src="./scripts/timer/timerElements.js" data-tab="timer"></script>
   <script type="module" src="./scripts/timer/timerEvents.js" data-tab="timer"></script>
   <script type="module" src="./scripts/tasks/taskElements.js"></script>
+  <script type="module" src="./scripts/settings/settingsFormElements.js"></script>
 </body>
 </html>

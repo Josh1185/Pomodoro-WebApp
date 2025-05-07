@@ -308,6 +308,15 @@
     animation: fadeIn 2s ease;
     box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.27);
   }
+
+  .task-list-options button {
+    background-color: var(--accent-color);
+    color: #fff;
+  }
+  
+  .task-list-options button svg {
+    fill: #fff;
+  }
 }
 
 @media only screen and (max-width: 380px) {
