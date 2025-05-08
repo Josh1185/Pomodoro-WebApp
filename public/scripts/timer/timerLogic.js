@@ -6,6 +6,8 @@ import { updatePomodoroProgress } from "./timerTaskProgress.js";
 let startingMins = getMinutes('pomo');
 let time = (startingMins * 60) - 1;
 let progressDegrees = 0;
+const timerEndSound = new Audio('../../sounds/timerAlarm.mp3');
+timerEndSound.load();
 
 export function initializeTimer(mins) {
 
@@ -94,6 +96,10 @@ export function startTimer() {
 
 export async function timerEnds() {
   timerState.timerRunning = false;
+
+  timerEndSound.play().catch(err => {
+    alert("Failed to play timer chime:", err);
+  });
 
   switch (timerState.currentStep) {
     // was a pomodoro timer
