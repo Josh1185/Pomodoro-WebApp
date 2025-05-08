@@ -1,4 +1,4 @@
-import { timerState, getMinutes, setMinutes, showCurrentTaskOnTimerPage } from "./timerState.js";
+import { timerState, getMinutes, showCurrentTaskOnTimerPage } from "./timerState.js";
 import { timerDisplay, startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, shortBreakStepBtn, longBreakStepBtn, currentTimerStepMsg, progressBar, timerContainer, currentTaskCircleContainer } from "./timerElements.js";
 import { deactivatePrevStepBtn } from "./timerEvents.js";
 import { updatePomodoroProgress } from "./timerTaskProgress.js";
@@ -92,7 +92,7 @@ export function startTimer() {
   if (time < 0) timerEnds();
 }
 
-export function timerEnds() {
+export async function timerEnds() {
   timerState.timerRunning = false;
 
   switch (timerState.currentStep) {
@@ -100,13 +100,13 @@ export function timerEnds() {
     case "pomodoro":
       // First 3 pomodoros are followed by short breaks
       if (timerState.pomodoroStepIndex <= 3) {
+        // UPDATE POMODORO PROGRESS ON TASK
+        await updatePomodoroProgress();
+
         // Increment pomoIndex and change step to short break
         timerState.pomodoroStepIndex++;
         timerState.currentStep = 'sb';
         shortBreakStepBtn.classList.add('active');
-
-        // UPDATE POMODORO PROGRESS ON TASK
-        updatePomodoroProgress();
 
         // Initialize timer
         deactivatePrevStepBtn(timerState.currentStep);
@@ -114,14 +114,14 @@ export function timerEnds() {
       }
       // After 3 pomodoros, switch to a long break
       else {
+        // UPDATE POMODORO PROGRESS ON TASK
+        await updatePomodoroProgress();
+        
         // Change step to long break and reset indexes for pomodoros and short breaks
         timerState.currentStep = 'lb';
         longBreakStepBtn.classList.add('active');
         timerState.pomodoroStepIndex = 1;
         timerState.shortBreakStepIndex = 1;
-
-        // UPDATE POMODORO PROGRESS ON TASK
-        updatePomodoroProgress();
 
         // Initialize timer
         deactivatePrevStepBtn(timerState.currentStep);

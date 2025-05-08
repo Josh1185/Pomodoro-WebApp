@@ -15,8 +15,12 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'username and password are required' });
   }
 
+  const client = await pool.connect();
   try {
-    // encrypt the password
+    // Begin transaction
+    await client.query('BEGIN');
+
+    // hash the password
     const hashedPwd = await bcrypt.hash(password, saltRounds);
 
     // Save the new user and hashed password to postgres
@@ -27,22 +31,36 @@ router.post('/signup', async (req, res) => {
     `;
     const values = [username, hashedPwd];
 
-    const result = await pool.query(insertUser, values);
+    const result = await client.query(insertUser, values);
     const userId = result.rows[0].id;
+
+    // Insert default settings for the new user
+    const insertSettings = `
+      INSERT INTO user_settings (user_id)
+      VALUES ($1)
+    `;
+    await client.query(insertSettings, [userId]);
+
+    // Commit transaction
+    await client.query('COMMIT');
 
     // Create a token
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '168h' });
     res.status(201).json({ token });
 
   } catch (err) {
+    // Rollback transaction in case of error
+    await client.query('ROLLBACK');
     console.log(err);
     
-    // If username exists
+    // If email/username exists
     if (err.code === '23505') {
-      return res.status(409).json({ error: 'Username already exists' });
+      return res.status(409).json({ error: 'Email already exists' });
     }
 
     res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    client.release();
   }
 });
 
@@ -59,7 +77,7 @@ router.post('/login', async (req, res) => {
 
     // If there is no user associated with the entered username
     if (result.rows.length === 0) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Invalid credentials" });
     }
 
     const user = result.rows[0];
@@ -67,7 +85,7 @@ router.post('/login', async (req, res) => {
     // If the password does not match, return out of function
     const passwordIsValid = await bcrypt.compare(password, user.password);
     if (!passwordIsValid) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     // Successful authentication
@@ -75,7 +93,7 @@ router.post('/login', async (req, res) => {
     res.json({ token });
 
   } catch (err) {
-    console.log(err);
+    console.log("Login error: ", err);
     res.sendStatus(503).json({ error: "Service unavailable" });
   }
 });

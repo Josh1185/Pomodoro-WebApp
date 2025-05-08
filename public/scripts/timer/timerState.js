@@ -1,5 +1,6 @@
 import { getCurrentTask, fetchTasks } from "../tasks/taskStorage.js";
 import { currentTaskCircleContainer } from "./timerElements.js";
+import { initSettings, settingsCache } from "../settings/settingsFetch.js";
 
 export const timerState = {
   currentStep: "pomodoro",
@@ -10,29 +11,26 @@ export const timerState = {
   intervalId: null
 };
 
-const POMODORO_MINUTES = 25;
-const SHORT_BREAK_MINUTES = 5;
-const LONG_BREAK_MINUTES = 15;
-
 export function getMinutes(type) {
-  switch (type) {
-    case "pomo":
-      return POMODORO_MINUTES;
-    case "sb":
-      return SHORT_BREAK_MINUTES;
-    case "lb":
-      return LONG_BREAK_MINUTES;
+  if (!settingsCache) {
+    switch (type) {
+      case "pomo":
+        return 25;
+      case "sb":
+        return 5;
+      case "lb":
+        return 15;
+    }
   }
-}
-
-export function setMinutes(type, amt) {
-  switch (type) {
-    case "pomo":
-      POMODORO_MINUTES = amt;
-    case "sb":
-      SHORT_BREAK_MINUTES = amt;
-    case "lb":
-      LONG_BREAK_MINUTES = amt;
+  else {
+    switch (type) {
+      case "pomo":
+        return settingsCache.pomodoro_duration;
+      case "sb":
+        return settingsCache.short_break_duration;
+      case "lb":
+        return settingsCache.long_break_duration;
+    }
   }
 }
 

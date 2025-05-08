@@ -1,4 +1,4 @@
-import { timerState, getMinutes, setMinutes } from "./timerState.js";
+import { timerState, getMinutes } from "./timerState.js";
 import { startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, longBreakStepBtn, shortBreakStepBtn } from "./timerElements.js";
 import { initializeTimer, startTimer, timerEnds } from "./timerLogic.js";
   

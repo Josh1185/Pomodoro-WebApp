@@ -11,7 +11,7 @@ logoutBtn.addEventListener('click', () => {
 
 // Tab functionality
 window.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.settings-tab').click();
+  document.querySelector('.timer-tab').click();
 });
 
 const timerTab = document.querySelector('.tab-btn.timer-tab');
