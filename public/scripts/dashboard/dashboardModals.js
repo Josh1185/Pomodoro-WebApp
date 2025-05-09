@@ -38,3 +38,16 @@ export function closeModal(modal, confirmBtn, cancelBtn, confirmFunction, cancel
 export function openModal(modal) {
   modal.style.display = 'block';
 }
+
+// Timer modal
+export const timerModalWrapper = document.querySelector('.timer-modal-wrapper');
+export const timerModalTitle = document.querySelector('.timer-modal-title');
+export const dismissTimerModalBtn = document.querySelector('.dismiss-timer-modal-btn');
+
+export function openTimerModal(title) {
+  timerModalTitle.textContent = title;
+  timerModalWrapper.style.display = 'flex';
+  dismissTimerModalBtn.addEventListener('click', () => {
+    timerModalWrapper.style.display = 'none';
+  }, { once: true });
+}

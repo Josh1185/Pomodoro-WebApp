@@ -4,9 +4,9 @@ import { apiBase } from "../tasks/taskStorage.js";
 import { pomodoroMinsInput, shortBreakMinsInput, longBreakMinsInput, accentColorInput, darkModeToggle, lightModeToggle } from "./settingsFormElements.js";
 
 export async function setSettings() {
-  const pomodoro_duration = pomodoroMinsInput.value;
-  const short_break_duration = shortBreakMinsInput.value;
-  const long_break_duration = longBreakMinsInput.value;
+  const pomodoro_duration = parseInt(pomodoroMinsInput.value, 10);
+  const short_break_duration = parseInt(shortBreakMinsInput.value, 10);
+  const long_break_duration = parseInt(longBreakMinsInput.value, 10);
   const accent_color = accentColorInput.value;
   const theme = document.querySelector('input[name="theme"]:checked').value;
 

@@ -10,6 +10,10 @@ export const lightModeToggle = document.querySelector('.light-mode-toggle');
 export const accentColorInput = document.querySelector('.accent-color-input');
 export const saveSettingsBtn = document.querySelector('.save-settings-btn');
 
-settingsForm.addEventListener('submit', async () => {
-  await setSettings();
-});
+document.addEventListener('DOMContentLoaded', () => {
+  settingsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await setSettings();
+    location.reload();
+  });
+})

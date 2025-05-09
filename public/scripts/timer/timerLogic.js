@@ -2,6 +2,7 @@ import { timerState, getMinutes, showCurrentTaskOnTimerPage } from "./timerState
 import { timerDisplay, startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, shortBreakStepBtn, longBreakStepBtn, currentTimerStepMsg, progressBar, timerContainer, currentTaskCircleContainer } from "./timerElements.js";
 import { deactivatePrevStepBtn } from "./timerEvents.js";
 import { updatePomodoroProgress } from "./timerTaskProgress.js";
+import { openTimerModal } from "../dashboard/dashboardModals.js";
 
 let startingMins = getMinutes('pomo');
 let time = (startingMins * 60) - 1;
@@ -109,6 +110,9 @@ export async function timerEnds() {
         // UPDATE POMODORO PROGRESS ON TASK
         await updatePomodoroProgress();
 
+        // Display modal
+        openTimerModal(`Pomodoro #${timerState.pomodoroStepIndex} completed.`);
+
         // Increment pomoIndex and change step to short break
         timerState.pomodoroStepIndex++;
         timerState.currentStep = 'sb';
@@ -122,6 +126,9 @@ export async function timerEnds() {
       else {
         // UPDATE POMODORO PROGRESS ON TASK
         await updatePomodoroProgress();
+
+        // Display modal
+        openTimerModal(`Pomodoro #${timerState.pomodoroStepIndex} completed.`);
         
         // Change step to long break and reset indexes for pomodoros and short breaks
         timerState.currentStep = 'lb';
@@ -136,6 +143,10 @@ export async function timerEnds() {
       break;
     // was a short break timer
     case "sb":
+
+      // Display modal
+      openTimerModal(`Short break #${timerState.shortBreakStepIndex} completed.`);
+
       // Increment shortBreak Index and change timer back to a pomodoro
       timerState.shortBreakStepIndex++;
       timerState.currentStep = 'pomodoro';
@@ -145,6 +156,10 @@ export async function timerEnds() {
       break;
     // was a long break timer
     case "lb":
+
+      // Display modal
+      openTimerModal(`Long break completed.`);
+
       // Change back to a pomodoro
       timerState.currentStep = 'pomodoro';
       pomodoroStepBtn.classList.add('active');
