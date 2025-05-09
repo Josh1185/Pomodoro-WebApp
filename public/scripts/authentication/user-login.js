@@ -1,5 +1,5 @@
 import { loginContent, loginBtn, loginEmailInput, loginPwdInput, errorDisplay } from "./user-auth-elements.js";
-import { validateEmail, validatePwd } from "./client-side-validation.js";
+import { validateEmail, validatePwd, sanitizeInput } from "./client-side-validation.js";
 
 // Redirect if user is already logged in
 if (localStorage.getItem('token')) {
@@ -11,8 +11,8 @@ const apiBase = '/';
 
 export async function loginUser() {
   // Access email and pwd values
-  const emailVal = loginEmailInput.value;
-  const pwdVal = loginPwdInput.value;
+  const emailVal = sanitizeInput(loginEmailInput.value);
+  const pwdVal = sanitizeInput(loginPwdInput.value);
 
   // Client side validation
   const emailValidationErrMsg = validateEmail(emailVal);
@@ -57,7 +57,6 @@ export async function loginUser() {
     window.location.href = '/dashboard';
 
   } catch (err) {
-    console.log(err.message);
     errorDisplay.innerText = err.message;
     errorDisplay.style.display = 'block';
   } finally {

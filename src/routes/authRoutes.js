@@ -2,17 +2,30 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { pool } from '../dbconfig.js';
+import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
+
+// Rate limiting for login
+const loginLimiter = rateLimit({
+  windowMS: 15 * 60 * 1000, // 15 mins
+  max: 5, // LIMIT EACH IP TO 5 REQUESTS PER windowMS
+  message: {
+    error: 'Too many login attempts. Please try again in 15 mins.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // Endpoint for users signing up POST /auth/signup
 router.post('/signup', async (req, res) => {
   const { username, password } = req.body;
-  const saltRounds = 10;
+  const saltRounds = 12;
 
   // Validate input
-  if (!username || !password) {
-    return res.status(400).json({ error: 'username and password are required' });
+  const usernameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!username || !password || !usernameRegex.test(username)) {
+    return res.status(400).json({ error: 'Invalid username or password' });
   }
 
   const client = await pool.connect();
@@ -45,17 +58,16 @@ router.post('/signup', async (req, res) => {
     await client.query('COMMIT');
 
     // Create a token
-    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '168h' });
+    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.status(201).json({ token });
 
   } catch (err) {
     // Rollback transaction in case of error
     await client.query('ROLLBACK');
-    console.log(err);
     
     // If email/username exists
     if (err.code === '23505') {
-      return res.status(409).json({ error: 'Email already exists' });
+      return res.status(409).json({ error: 'Email already in use' });
     }
 
     res.status(500).json({ error: 'Internal server error' });
@@ -65,7 +77,7 @@ router.post('/signup', async (req, res) => {
 });
 
 // Endpoint for users loging in POST /auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   const { username, password } = req.body;
 
   // Match the credentials to a user in the database
@@ -89,11 +101,11 @@ router.post('/login', async (req, res) => {
     }
 
     // Successful authentication
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token });
 
   } catch (err) {
-    console.log("Login error: ", err);
+    console.error("Login error: ", err);
     res.sendStatus(503).json({ error: "Service unavailable" });
   }
 });
