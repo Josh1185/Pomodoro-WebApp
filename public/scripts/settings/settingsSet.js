@@ -1,7 +1,8 @@
 import { settingsCache, initSettings } from "./settingsFetch.js";
 import { token } from "../dashboard/dashboardAuth.js";
 import { apiBase } from "../tasks/taskStorage.js";
-import { pomodoroMinsInput, shortBreakMinsInput, longBreakMinsInput, accentColorInput, darkModeToggle, lightModeToggle } from "./settingsFormElements.js";
+import { pomodoroMinsInput, shortBreakMinsInput, longBreakMinsInput, accentColorInput, darkModeToggle, lightModeToggle, settingsErrMsg } from "./settingsFormElements.js";
+import { validateDuration, validateTheme } from "./settingsValidation.js";
 
 export async function setSettings() {
   const pomodoro_duration = parseInt(pomodoroMinsInput.value, 10);
@@ -11,6 +12,22 @@ export async function setSettings() {
   const theme = document.querySelector('input[name="theme"]:checked').value;
 
   // VALIDATION GOES HERE (work in progress)
+  if (
+    validateDuration(pomodoro_duration) ||
+    validateDuration(short_break_duration) ||
+    validateDuration(long_break_duration) ||
+    validateTheme(theme)
+  ) {
+    settingsErrMsg.innerHTML = 
+      validateDuration(pomodoro_duration) ||
+      validateDuration(short_break_duration) ||
+      validateDuration(long_break_duration) ||
+      validateTheme(theme);
+    settingsErrMsg.style.display = 'block';
+    return;
+  }
+
+  settingsErrMsg.style.display = 'none';
 
   try {
     // Make api post request

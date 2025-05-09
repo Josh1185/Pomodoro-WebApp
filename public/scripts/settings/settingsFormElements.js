@@ -9,6 +9,7 @@ export const darkModeToggle = document.querySelector('.dark-mode-toggle');
 export const lightModeToggle = document.querySelector('.light-mode-toggle');
 export const accentColorInput = document.querySelector('.accent-color-input');
 export const saveSettingsBtn = document.querySelector('.save-settings-btn');
+export const settingsErrMsg = document.querySelector('.settings-error-msg');
 
 document.addEventListener('DOMContentLoaded', () => {
   settingsForm.addEventListener('submit', async (e) => {

@@ -3,6 +3,21 @@ import { pool } from '../dbconfig.js';
 
 const router = express.Router();
 
+// Validation functions
+function validateDuration(val) {
+  const num = Number(val);
+  return (
+    !isNaN(num) &&
+    Number.isInteger(num) &&
+    num >= 1 &&
+    num <= 60
+  );
+}
+
+function validateTheme(theme) {
+  return theme === 'light' || theme === 'dark';
+}
+
 // Get all settings for a logged in user GET /
 router.get('/', async (req, res) => {
   try {
@@ -28,16 +43,27 @@ router.get('/', async (req, res) => {
 
 // Update settings for a logged in user PUT /
 router.put('/', async (req, res) => {
-  try {
-    const userId = req.userId;
-    const {
-      pomodoro_duration,
-      short_break_duration,
-      long_break_duration,
-      theme,
-      accent_color
-    } = req.body;
 
+  const userId = req.userId;
+  const {
+    pomodoro_duration,
+    short_break_duration,
+    long_break_duration,
+    theme,
+    accent_color
+  } = req.body;
+
+  // Validate
+  if (
+    !validateDuration(pomodoro_duration) ||
+    !validateDuration(short_break_duration) ||
+    !validateDuration(long_break_duration) ||
+    !validateTheme(theme)
+  ) {
+    return res.status(400).json({ error: "Invalid settings" });
+  }
+
+  try {
     const updateSettings = `
       INSERT INTO user_settings (user_id, pomodoro_duration, short_break_duration, long_break_duration, theme, accent_color)
       VALUES ($1, $2, $3, $4, $5, $6)
