@@ -3,10 +3,11 @@ import { addTaskForm, addTaskTitleInput, addTaskDescInput, addTaskEstPomosInput,
 import { validateDescription, validateEstimatedPomodoros, validateTitle } from "./taskFormValidation.js";
 import { token } from "../dashboard/dashboardAuth.js";
 import { deleteTaskModalTitle, deleteTaskModalWrapper, confirmDeleteTaskBtn, cancelDeleteTaskBtn, closeModal, openModal, completeTaskModalTitle, completeTaskModalWrapper, confirmCompleteTaskBtn, cancelCompleteTaskBtn, pincurrentTaskModalTitle, pincurrentTaskModalWrapper, confirmPincurrentTaskBtn, cancelPincurrentTaskBtn, unpincurrentTaskModalTitle, unpincurrentTaskModalWrapper, confirmUnpincurrentTaskBtn, cancelUnpincurrentTaskBtn, clearTasksModalTitle, clearTasksModalWrapper, confirmClearTasksBtn, cancelClearTasksBtn } from "../dashboard/dashboardModals.js";
+import { sanitizeInput } from "../authentication/client-side-validation.js";
 
 export async function addTask() {
-  const title = addTaskTitleInput.value;
-  const description = addTaskDescInput.value;
+  const title = sanitizeInput(addTaskTitleInput.value);
+  const description = sanitizeInput(addTaskDescInput.value);
   const estimated_pomodoros = addTaskEstPomosInput.value;
 
   // VALIDATION GOES HERE
@@ -55,7 +56,6 @@ export async function addTask() {
     fetchTasks();
   }
   catch (err) {
-    console.log('Error adding task', err);
     addErrorDisplay.innerHTML = 'Failed to add task';
     addErrorDisplay.style.display = 'block';
   }
@@ -73,8 +73,8 @@ export async function editTask(id, title_, desc_, estPomos_) {
   async function confirmEditTask() {
 
     // Get new task values
-    const title = editTaskTitleInput.value;
-    const description = editTaskDescInput.value;
+    const title = sanitizeInput(editTaskTitleInput.value);
+    const description = sanitizeInput(editTaskDescInput.value);
     const estimated_pomodoros = editTaskEstPomosInput.value;
 
     // VALIDATION GOES HERE

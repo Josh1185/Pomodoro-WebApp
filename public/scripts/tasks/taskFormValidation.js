@@ -1,3 +1,4 @@
+
 const regex = /<script.*?>.*?<\/script>/i;
 
 export function validateTitle(field) {

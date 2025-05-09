@@ -3,6 +3,36 @@ import { pool } from '../dbconfig.js';
 
 const router = express.Router();
 
+function sanitize(str) {
+  return String(str)
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .trim();
+}
+
+function validateTask({ title, description, estimated_pomodoros }) {
+  const errors = [];
+
+  if (!title || title.trim().length === 0) {
+    errors.push("Title is required");
+  } else if (title.length > 100) {
+    errors.push("Title must be under 100 characters");
+  }
+
+  if (!description || description.trim().length === 0) {
+    errors.push("Description is required");
+  } else if (description.length > 300) {
+    errors.push("Description must be under 300 characters");
+  }
+
+  const est = Number(estimated_pomodoros);
+  if (!estimated_pomodoros || isNaN(est) || est < 1 || est >= 100 || !Number.isInteger(est)) {
+    errors.push("Estimated pomodoros must be a positive integer under 100");
+  }
+
+  return errors;
+}
+
 // Get all of a logged in user's tasks
 router.get('/', async (req, res) => {
   try {
@@ -23,19 +53,28 @@ router.get('/', async (req, res) => {
 
 // Add a new task to the list
 router.post('/', async (req, res) => {
-  try {
-    const {
-      title, 
-      description, 
-      estimated_pomodoros
-    } = req.body;
+  
+  const {
+    title, 
+    description, 
+    estimated_pomodoros
+  } = req.body;
 
+  const errors = validateTask({ title, description, estimated_pomodoros });
+  if (errors.length) {
+    return res.status(400).json({ error: errors.join(", ") });
+  }
+
+  const sanitizedTitle = sanitize(title);
+  const sanitizedDescription = sanitize(description);
+
+  try {
     const addTask = `
       INSERT INTO tasks (user_id, title, description, estimated_pomodoros)
       VALUES ($1, $2, $3, $4)
       RETURNING id
     `;
-    const values = [req.userId, title, description, estimated_pomodoros];
+    const values = [req.userId, sanitizedTitle, sanitizedDescription, estimated_pomodoros];
 
     const result = await pool.query(addTask, values);
     const taskId = result.rows[0].id;
@@ -43,13 +82,14 @@ router.post('/', async (req, res) => {
     res.status(201).json({
       id: taskId,
       user_id: req.userId,
-      title,
-      description,
+      title: sanitizedTitle,
+      description: sanitizedDescription,
       completed_pomodoros: 0,
       estimated_pomodoros,
       is_current: false,
       is_completed: false,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      completed_at: null
     });
   }
   catch (err) {
@@ -89,14 +129,23 @@ router.put('/pomos/:id', async (req, res) => {
 
 // Edit a task  PUT /edit/:id
 router.put('/edit/:id', async (req, res) => {
-  try {
-    const {
-      title,
-      description,
-      estimated_pomodoros
-    } = req.body;
-    const taskId = req.params.id;
+  
+  const {
+    title,
+    description,
+    estimated_pomodoros
+  } = req.body;
+  const taskId = req.params.id;
 
+  const errors = validateTask({ title, description, estimated_pomodoros });
+  if (errors.length) {
+    return res.status(400).json({ error: errors.join(", ") });
+  }
+
+  const sanitizedTitle = sanitize(title);
+  const sanitizedDescription = sanitize(description);
+
+  try {
     const editTask = `
       UPDATE tasks
       SET title = $1,
@@ -105,7 +154,7 @@ router.put('/edit/:id', async (req, res) => {
       WHERE id = $4 AND user_id = $5
       RETURNING *
     `;
-    const values = [title, description, estimated_pomodoros, taskId, req.userId];
+    const values = [sanitizedTitle, sanitizedDescription, estimated_pomodoros, taskId, req.userId];
     
     const result = await pool.query(editTask, values);
 
