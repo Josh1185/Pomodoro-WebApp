@@ -14,7 +14,7 @@ export async function updatePomodoroProgress() {
         'Authorization': token
       },
       body: JSON.stringify({
-        completed_pomodoros: completed_pomodoros + 1
+        completed_pomodoros: completed_pomodoros + 1,
       })
     });
 

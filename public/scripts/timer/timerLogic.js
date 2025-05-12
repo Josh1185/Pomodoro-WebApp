@@ -3,16 +3,20 @@ import { timerDisplay, startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepB
 import { deactivatePrevStepBtn } from "./timerEvents.js";
 import { updatePomodoroProgress } from "./timerTaskProgress.js";
 import { openTimerModal } from "../dashboard/dashboardModals.js";
+import { getCurrentTask } from "../tasks/taskStorage.js";
+import { updateStats } from "../stats/statsUpdate.js";
 
 let startingMins = getMinutes('pomo');
 let time = (startingMins * 60) - 1;
 let progressDegrees = 0;
 const timerEndSound = new Audio('../../sounds/timerAlarm.mp3');
+export let elapsedTime = 0;
 timerEndSound.load();
 
 export function initializeTimer(mins) {
 
   timerState.timerRunning = false;
+  elapsedTime = 0;
   clearInterval(timerState.intervalId);
   startingMins = mins;
   time = (startingMins * 60) - 1;
@@ -91,6 +95,9 @@ export function startTimer() {
 
   // Decrement the time each second
   time--;
+  // Increment elapsed time each second
+  elapsedTime++;
+  
   // Check if the timer is done (time < 0)
   if (time < 0) timerEnds();
 }
@@ -107,8 +114,10 @@ export async function timerEnds() {
     case "pomodoro":
       // First 3 pomodoros are followed by short breaks
       if (timerState.pomodoroStepIndex <= 3) {
-        // UPDATE POMODORO PROGRESS ON TASK
-        await updatePomodoroProgress();
+        // UPDATE POMODORO PROGRESS ON TASK (IF THERES A CURRENT TASK)
+        if (getCurrentTask()) await updatePomodoroProgress();
+        // Update stats
+        updateStats(elapsedTime);
 
         // Display modal
         openTimerModal(`Pomodoro #${timerState.pomodoroStepIndex} completed.`);
@@ -124,8 +133,10 @@ export async function timerEnds() {
       }
       // After 3 pomodoros, switch to a long break
       else {
-        // UPDATE POMODORO PROGRESS ON TASK
-        await updatePomodoroProgress();
+        // UPDATE POMODORO PROGRESS ON TASK (IF THERES A CURRENT TASK)
+        if (getCurrentTask) await updatePomodoroProgress();
+        // Update stats
+        updateStats(elapsedTime);
 
         // Display modal
         openTimerModal(`Pomodoro #${timerState.pomodoroStepIndex} completed.`);

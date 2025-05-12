@@ -1,0 +1,94 @@
+import express from 'express';
+import { pool } from '../dbconfig.js';
+
+const router = express.Router();
+
+// Get all stats for a logged in user GET/
+router.get('/', async (req, res) => {
+  try {
+    const userId = req.userId;
+    const getStats = `
+      SELECT * FROM user_stats
+      WHERE user_id = $1
+    `;
+    const values = [userId];
+
+    const result = await pool.query(getStats, values);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Stats not found' });
+    }
+
+    res.json(result.rows[0]);
+  }
+  catch (err) {
+    console.log('Error fetching stats:', err);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
+// Update stats for a completed timer PUT /update
+router.put('/update', async (req, res) => {
+  const { pomodoroTime } = req.body;
+  const userId = req.userId;
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    const { rows } = await client.query(`
+      SELECT last_study_date, consecutive_days_streak
+      FROM user_stats
+      WHERE user_id = $1
+    `, [userId]);
+
+    if (rows.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'User stats not found' });
+    }
+
+    // Streak logic
+    const { last_study_date, consecutive_days_streak } = rows[0];
+    let newStreak = consecutive_days_streak;
+
+    if (!last_study_date) {
+      newStreak = 1;
+    }
+    else {
+      const lastDate = new Date(last_study_date);
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (lastDate.toDateString() === yesterday.toDateString()) {
+        newStreak += 1;
+      }
+      else if (lastDate.toDateString() !== new Date().toDateString()) {
+        newStreak = 1;
+      }
+    }
+
+    // Update stats query
+    await client.query(`
+      UPDATE user_stats
+      SET total_pomodoro_time = total_pomodoro_time + $1,
+          total_pomodoros_completed = total_pomodoros_completed + 1,
+          last_study_date = $2,
+          consecutive_days_streak = $3
+      WHERE user_id = $4
+    `, [pomodoroTime, today, newStreak, userId]);
+
+    await client.query('COMMIT');
+    res.json({ message: 'User stats updated successfully' });
+  }
+  catch (err) {
+    await client.query('ROLLBACK');
+    console.log('Error updating stats: ', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  finally {
+    client.release();
+  }
+});
+
+export default router;

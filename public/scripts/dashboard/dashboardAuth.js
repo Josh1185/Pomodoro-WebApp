@@ -3,6 +3,7 @@ import { fetchTasks } from "../tasks/taskStorage.js";
 import { initializeTimer } from "../timer/timerLogic.js";
 import { getMinutes } from "../timer/timerState.js";
 import { initSettings, settingsCache } from "../settings/settingsFetch.js";
+import { fetchStats } from '../stats/statsFetch.js';
 
 function isTokenExpired(token) {
   try {
@@ -31,6 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
       if (!settingsCache) {
         await initSettings();
       }
+      await fetchStats();
       await fetchTasks();
       initializeTimer(getMinutes('pomo'));
     }

@@ -6,6 +6,7 @@ import { pool } from './dbconfig.js';
 import authMiddleware from './middleware/authMiddleware.js';
 import taskRoutes from './routes/taskRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import statRoutes from './routes/statRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -47,7 +48,16 @@ async function initDb() {
         long_break_duration INTEGER DEFAULT 15,
         theme VARCHAR(10) DEFAULT 'light',
         accent_color VARCHAR(20) DEFAULT '#f66262'
-      )
+      );
+
+      CREATE TABLE IF NOT EXISTS user_stats (
+        user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        total_pomodoro_time INTEGER DEFAULT 0,
+        total_pomodoros_completed INTEGER DEFAULT 0,
+        total_tasks_completed INTEGER DEFAULT 0,
+        last_study_date DATE DEFAULT NULL,
+        consecutive_days_streak INTEGER DEFAULT 0
+      );
     `);
     console.log('DB successfully initialized');
   } catch (err) {
@@ -80,6 +90,7 @@ app.get('/dashboard', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/tasks', authMiddleware, taskRoutes);
 app.use('/settings', authMiddleware, settingsRoutes);
+app.use('/stats', authMiddleware, statRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server has started on port: ${PORT}`);

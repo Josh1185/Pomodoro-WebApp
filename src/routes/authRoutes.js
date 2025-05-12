@@ -54,6 +54,20 @@ router.post('/signup', async (req, res) => {
     `;
     await client.query(insertSettings, [userId]);
 
+    // Insert default stats for the new user
+    const insertStats = `
+      INSERT INTO user_stats (
+        user_id, 
+        total_pomodoro_time, 
+        total_pomodoros_completed, 
+        total_tasks_completed, 
+        last_study_date, 
+        consecutive_days_streak
+      )
+      VALUES ($1, $2, $3, $4, $5, $6)
+    `;
+    await client.query(insertStats, [userId, 0, 0, 0, null, 0]);
+
     // Commit transaction
     await client.query('COMMIT');
 

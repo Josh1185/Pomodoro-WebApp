@@ -98,13 +98,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Update completed pomodoros /pomos/:id
+// Update completed pomodoros /pomos/:id (AND STATS)
 router.put('/pomos/:id', async (req, res) => {
   try {
     const { completed_pomodoros } = req.body;
     const taskId = req.params.id;
     const userId = req.userId;
 
+    // Update task pomodoros
     const updatePomos = `
       UPDATE tasks
       SET completed_pomodoros = $1
@@ -114,12 +115,11 @@ router.put('/pomos/:id', async (req, res) => {
     const values = [completed_pomodoros, taskId, userId];
 
     const result = await pool.query(updatePomos, values);
-
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Task not found or not authorized" });
     }
 
-    res.json({ message: "Current task completed_pomodoros updated successfully" });
+    res.json({ message: "Current task completed_pomodoros updated successfully and stats updated successfully" });
   }
   catch (err) {
     console.log("Error updating current task completed_pomodoros: ", err);
@@ -207,6 +207,24 @@ router.put('/complete/:id', async (req, res) => {
     const taskId = req.params.id;
     const userId = req.userId;
 
+    const client = await pool.connect();
+    await client.query('BEGIN');
+
+    // Check if the task is already completed
+    const existingTaskResponse = await client.query(`
+      SELECT is_completed
+      FROM tasks
+      WHERE id = $1 AND user_id = $2
+      `, [taskId, userId]
+    );
+
+    if (existingTaskResponse.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: "Task not found or not authorized" });
+    }
+
+    const alreadyCompleted = existingTaskResponse.rows[0].is_completed;
+
     const markTaskComplete = `
       UPDATE tasks
       SET is_completed = $1,
@@ -216,18 +234,28 @@ router.put('/complete/:id', async (req, res) => {
       RETURNING *
     `;
     const values = [is_completed, is_current, taskId, userId];
+    const result = await client.query(markTaskComplete, values);
 
-    const result = await pool.query(markTaskComplete, values);
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Task not found or not authorized" });
+    // If the task is newly completed, increment total_tasks_completed
+    if (!alreadyCompleted && is_completed === true) {
+      await client.query(`
+        UPDATE user_stats
+        SET total_tasks_completed = total_tasks_completed + 1
+        WHERE user_id = $1
+        `, [userId]
+      );
     }
 
+    await client.query('COMMIT');
     res.json({ message: "Task marked as complete" });
   }
   catch (err) {
+    await client.query('ROLLBACK');
     console.log("Error marking task as complete: ", err);
     res.status(500).json({ error: "Internal server error" });
+  }
+  finally {
+    client.release();
   }
 });
 
