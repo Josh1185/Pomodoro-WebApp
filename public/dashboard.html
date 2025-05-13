@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="styles/taskForms.css">
   <link rel="stylesheet" href="styles/modals.css">
   <link rel="stylesheet" href="styles/settings.css">
+  <link rel="stylesheet" href="styles/stats.css">
 </head>
 <body>
   <header>
@@ -256,7 +257,16 @@
     </div>
 
     <div class="stats-wrapper" style="display: none;">
-      stats
+      <div class="stats-container">
+        <div class="leaderboard-filter">
+          <button class="stats-filter-btn active">Stats</button>
+          <button class="leaderboard-filter-btn">Leaderboard</button>
+        </div>
+
+        <div class="personal-stats-container">
+        
+        </div>
+      </div>
     </div>
   
     <div class="settings-wrapper" style="display: none;">
@@ -323,5 +333,6 @@
   <script type="module" src="./scripts/timer/timerEvents.js" data-tab="timer"></script>
   <script type="module" src="./scripts/tasks/taskElements.js"></script>
   <script type="module" src="./scripts/settings/settingsFormElements.js"></script>
+  <script type="module" src="./scripts/stats/statsElements.js"></script>
 </body>
 </html>

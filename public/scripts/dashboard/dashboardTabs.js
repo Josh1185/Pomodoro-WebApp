@@ -1,4 +1,5 @@
 import { logoutUser } from "../authentication/user-logout.js";
+import { fetchStats } from "../stats/statsFetch.js";
 import { fetchTasks } from "../tasks/taskStorage.js";
 import { initializeTimer } from "../timer/timerLogic.js";
 import { showCurrentTaskOnTimerPage } from "../timer/timerState.js";
@@ -84,7 +85,8 @@ async function renderTasksPage() {
   settingsWrapper.style.display = "none";
 }
 
-function renderStatsPage() {
+async function renderStatsPage() {
+  await fetchStats();
   timerWrapper.style.display = "none";
   tasksWrapper.style.display = "none";
   statsWrapper.style.display = "flex";
