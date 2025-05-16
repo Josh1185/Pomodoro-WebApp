@@ -266,6 +266,15 @@
         <div class="personal-stats-container">
         
         </div>
+
+        <div class="bar-graph-container">
+          <div class="graph-range-btns">
+            <button class="daily-range-btn active">Daily</button>
+            <button class="weekly-range-btn">Weekly</button>
+            <button class="monthly-range-btn">Monthly</button>
+          </div>
+          <canvas id="bar-chart"></canvas>
+        </div>
       </div>
     </div>
   
@@ -327,6 +336,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script type="module" src="./scripts/dashboard/dashboardAuth.js"></script>
   <script type="module" src="./scripts/dashboard/dashboardTabs.js"></script>
   <script type="module" src="./scripts/timer/timerElements.js" data-tab="timer"></script>
@@ -334,5 +345,6 @@
   <script type="module" src="./scripts/tasks/taskElements.js"></script>
   <script type="module" src="./scripts/settings/settingsFormElements.js"></script>
   <script type="module" src="./scripts/stats/statsElements.js"></script>
+  <script type="module" src="./scripts/stats/statsGraph.js"></script>
 </body>
 </html>

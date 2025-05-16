@@ -44,9 +44,5 @@ function renderStats(stats) {
         <h5 class="completed-tasks-display">${stats.total_tasks_completed}</h5>
       </div>
     </div>
-
-    <div class="bar-graph-container">
-      chart coming soon
-    </div>
   `;
 }

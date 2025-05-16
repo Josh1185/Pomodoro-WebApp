@@ -12,7 +12,7 @@ logoutBtn.addEventListener('click', () => {
 
 // Tab functionality
 window.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.timer-tab').click();
+  document.querySelector('.stats-tab').click();
 });
 
 const timerTab = document.querySelector('.tab-btn.timer-tab');

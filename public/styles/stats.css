@@ -26,7 +26,8 @@
   align-items: center;
 }
 
-.leaderboard-filter button {
+.leaderboard-filter button,
+.graph-range-btns button {
   flex: 1;
   padding: 1rem 0;
   cursor: pointer;
@@ -37,11 +38,13 @@
   border-bottom: 2px solid var(--background-color-2);
 }
 
-.leaderboard-filter button:hover {
+.leaderboard-filter button:hover,
+.graph-range-btns button:hover {
   background-color: var(--background-color-2);
 }
 
-.leaderboard-filter button.active {
+.leaderboard-filter button.active,
+.graph-range-btns button.active {
   color: var(--accent-color);
   border-bottom: 2px solid var(--accent-color);
 }
@@ -92,4 +95,18 @@
 
 .stat-widget h5 {
   color: var(--accent-color);
+}
+
+.bar-graph-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.graph-range-btns {
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
