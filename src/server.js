@@ -58,7 +58,16 @@ async function initDb() {
         last_study_date DATE DEFAULT NULL,
         consecutive_days_streak INTEGER DEFAULT 0
       );
+
+      CREATE TABLE IF NOT EXISTS pomodoro_sessions (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        task_id INTEGER REFERENCES tasks(id) ON DELETE SET NULL,
+        duration_minutes INTEGER NOT NULL,
+        completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
     `);
+
     console.log('DB successfully initialized');
   } catch (err) {
     console.log(err);

@@ -91,4 +91,23 @@ router.put('/update', async (req, res) => {
   }
 });
 
+// Log pomodoro sessions
+router.post('/log-session', async (req, res) => {
+  const userId = req.userId;
+  const { duration_minutes, task_id } = req.body;
+
+  try {
+    await pool.query(`
+      INSERT INTO pomodoro_sessions (user_id, task_id, duration_minutes)
+      VALUES  ($1, $2, $3)
+    `, [userId, task_id || null, duration_minutes]);
+
+    res.status(201).json({ message: 'Session logged successfully' });
+  }
+  catch (err) {
+    console.log('Error logging session:', err);
+    res.status(500).json({ error: 'Failed to log session' });
+  }
+});
+
 export default router;

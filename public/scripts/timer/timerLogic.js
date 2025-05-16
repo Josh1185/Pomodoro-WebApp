@@ -4,7 +4,7 @@ import { deactivatePrevStepBtn } from "./timerEvents.js";
 import { updatePomodoroProgress } from "./timerTaskProgress.js";
 import { openTimerModal } from "../dashboard/dashboardModals.js";
 import { getCurrentTask } from "../tasks/taskStorage.js";
-import { updateStats } from "../stats/statsUpdate.js";
+import { logPomodoroSession, updateStats } from "../stats/statsUpdate.js";
 
 let startingMins = getMinutes('pomo');
 let time = (startingMins * 60) - 1;
@@ -118,6 +118,8 @@ export async function timerEnds() {
         if (getCurrentTask()) await updatePomodoroProgress();
         // Update stats
         updateStats(elapsedTime);
+        // Log pomodoro session
+        logPomodoroSession(elapsedTime);
 
         // Display modal
         openTimerModal(`Pomodoro #${timerState.pomodoroStepIndex} completed.`);
@@ -137,6 +139,8 @@ export async function timerEnds() {
         if (getCurrentTask) await updatePomodoroProgress();
         // Update stats
         updateStats(elapsedTime);
+        // Log pomodoro session
+        logPomodoroSession(elapsedTime);
 
         // Display modal
         openTimerModal(`Pomodoro #${timerState.pomodoroStepIndex} completed.`);
