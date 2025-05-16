@@ -1,3 +1,5 @@
+import { fetchPomodoroSessions } from "./statsFetch.js";
+
 let pomodoroChart;
 
 export function createPomodoroChart() {
@@ -47,14 +49,57 @@ export function updateChartAccentColor() {
 }
 
 export async function updateChart(range) {
-  console.log(range)
+  const pomodoroSessions = await fetchPomodoroSessions();
+  if (!pomodoroSessions) return;
+
+  let dataToUse = [];
+
+  // Find appropriate array of data based on range selected
+  switch (range) {
+    case 'daily':
+      dataToUse = pomodoroSessions.daily;
+      break;
+    case 'weekly':
+      dataToUse = pomodoroSessions.weekly;
+      break;
+    case 'monthly':
+      dataToUse = pomodoroSessions.monthly;
+      break;
+  }
+
+  // Generate labels and data for bar graph
+  let labels = [];
+  let data = [];
+
+  if (range === 'daily') {
+    labels = dataToUse.map(item => {
+      const date = new Date(item.date);
+      return date.toLocaleDateString('en-US', { weekday: 'short' }); // 'Mon', 'Tue'
+    });
+
+    data = dataToUse.map(item => Number(item.minutes));
+  }
+
+  else if (range === 'weekly') {
+    labels = dataToUse.map(item => {
+      const date = new Date(item.week_start);
+      return `Week of ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`; // week of 5/12
+    });
+
+    data = dataToUse.map(item => Number(item.minutes));
+  }
+
+  else if (range === 'monthly') {
+    labels = dataToUse.map(item => {
+      const [year, month] = item.month.split('-');
+      return new Date(year, month - 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }); // May 2025
+    });
+
+    data = dataToUse.map(item => Number(item.minutes));
+  }
+
+  // Update the chartjs instance
+  pomodoroChart.data.labels = labels;
+  pomodoroChart.data.datasets[0].data = data;
+  pomodoroChart.update();
 }
-
-/*
-const labels = ['April', 'May', 'June'];
-const data = [320, 450, 610];
-
-pomodoroChart.data.labels = labels;
-pomodoroChart.data.datasets[0].data = data;
-pomodoroChart.update();
-*/

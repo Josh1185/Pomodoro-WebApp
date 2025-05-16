@@ -4,7 +4,7 @@ import { initializeTimer } from "../timer/timerLogic.js";
 import { getMinutes } from "../timer/timerState.js";
 import { initSettings, settingsCache } from "../settings/settingsFetch.js";
 import { fetchStats } from '../stats/statsFetch.js';
-import { createPomodoroChart, updateChartAccentColor } from "../stats/statsGraph.js";
+import { createPomodoroChart, updateChart, updateChartAccentColor } from "../stats/statsGraph.js";
 
 function isTokenExpired(token) {
   try {
@@ -35,6 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
       updateChartAccentColor();
       await fetchStats();
       await fetchTasks();
+      await updateChart('daily');
       initializeTimer(getMinutes('pomo'));
     }
     catch (err) {

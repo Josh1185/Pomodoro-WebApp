@@ -110,4 +110,64 @@ router.post('/log-session', async (req, res) => {
   }
 });
 
+// Retrieve pomodoro session history
+router.get('/pomodoro-history', async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const client = await pool.connect();
+
+    const dailySessionQuery = `
+      SELECT
+        DATE(completed_at) AS date,
+        SUM(duration_minutes) AS minutes
+      FROM pomodoro_sessions
+      WHERE user_id = $1
+      GROUP BY DATE(completed_at)
+      ORDER BY date DESC
+      LIMIT 30
+    `;
+
+    const weeklySessionQuery = `
+      SELECT
+        DATE_TRUNC('week', completed_at)::date AS week_start,
+        SUM(duration_minutes) AS minutes
+      FROM pomodoro_sessions
+      WHERE user_id = $1
+      GROUP BY week_start
+      ORDER BY week_start DESC
+      LIMIT 12
+    `;
+
+    const monthlySessionQuery = `
+      SELECT 
+        TO_CHAR(completed_at, 'YYYY-MM') AS month,
+        SUM(duration_minutes) AS minutes
+      FROM pomodoro_sessions
+      WHERE user_id = $1
+      GROUP BY month
+      ORDER BY month DESC
+      LIMIT 6
+    `;
+
+    const [dailySessionResult, weeklySessionResult, monthlySessionResult] = await Promise.all([
+      client.query(dailySessionQuery, [userId]),
+      client.query(weeklySessionQuery, [userId]),
+      client.query(monthlySessionQuery, [userId])
+    ]);
+
+    client.release();
+
+    res.json({
+      daily: dailySessionResult.rows,
+      weekly: weeklySessionResult.rows,
+      monthly: monthlySessionResult.rows
+    });
+  }
+  catch (err) {
+    console.error('Error fetching pomodoro history:', err);
+    res.status(500).json({ error: 'Failed to fetch pomodoro stats' });
+  }
+});
+
 export default router;

@@ -21,6 +21,26 @@ export async function fetchStats() {
   }
 }
 
+export async function fetchPomodoroSessions() {
+  try {
+    // make api request
+    const response = await fetch(`${apiBase}stats/pomodoro-history`, {
+      headers: { 'Authorization': token }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch pomodoro session history');
+    }
+
+    const pomodoroHistory = await response.json();
+    return pomodoroHistory;
+  }
+  catch (err) {
+    console.log('Failed to fetch pomodoro session history', err);
+  }
+}
+
 // Still a work in progress
 function renderStats(stats) {
   personalStatsContainer.innerHTML = `
