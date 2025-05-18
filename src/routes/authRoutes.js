@@ -19,13 +19,13 @@ const loginLimiter = rateLimit({
 
 // Endpoint for users signing up POST /auth/signup
 router.post('/signup', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
   const saltRounds = 12;
 
   // Validate input
-  const usernameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!username || !password || !usernameRegex.test(username)) {
-    return res.status(400).json({ error: 'Invalid username or password' });
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!username || !password || !email || !emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Invalid email or password' });
   }
 
   const client = await pool.connect();
@@ -38,11 +38,11 @@ router.post('/signup', async (req, res) => {
 
     // Save the new user and hashed password to postgres
     const insertUser = `
-      INSERT INTO users (username, password) 
-      VALUES ($1, $2) 
+      INSERT INTO users (username, email, password) 
+      VALUES ($1, $2, $3) 
       RETURNING id
     `;
-    const values = [username, hashedPwd];
+    const values = [username, email, hashedPwd];
 
     const result = await client.query(insertUser, values);
     const userId = result.rows[0].id;
@@ -92,11 +92,11 @@ router.post('/signup', async (req, res) => {
 
 // Endpoint for users loging in POST /auth/login
 router.post('/login', loginLimiter, async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   // Match the credentials to a user in the database
-  const getUser = `SELECT * FROM users WHERE username = $1`;
-  const value = [username];
+  const getUser = `SELECT * FROM users WHERE email = $1`;
+  const value = [email];
 
   try {
     const result = await pool.query(getUser, value);

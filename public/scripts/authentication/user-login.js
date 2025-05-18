@@ -39,7 +39,7 @@ export async function loginUser() {
     const response = await fetch(apiBase + 'auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: emailVal, password: pwdVal })
+      body: JSON.stringify({ email: emailVal, password: pwdVal })
     });
 
     if (!response.ok) {

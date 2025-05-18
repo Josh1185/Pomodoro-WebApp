@@ -4,6 +4,9 @@ import { fetchStats } from "./statsFetch.js";
 
 export async function updateStats(elapsedTime) {
   try {
+
+    const elapsedMins = Math.floor(elapsedTime / 60);
+
     // make api request
     const response = await fetch(`${apiBase}stats/update`, {
       method: 'PUT',
@@ -12,7 +15,7 @@ export async function updateStats(elapsedTime) {
         'Authorization': token
       },
       body: JSON.stringify({
-        pomodoroTime: elapsedTime
+        pomodoroTime: elapsedMins
       })
     });
 

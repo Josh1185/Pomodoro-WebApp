@@ -42,12 +42,15 @@ export async function registerNewUser() {
   signUpBtn.innerText = 'Authenticating...';
 
   // Registration logic
+  const index = emailVal.indexOf('@');
+  const username = emailVal.slice(0, index);
+
   try {
     let data;
     const response = await fetch(apiBase + 'auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: emailVal, password: pwdVal })
+      body: JSON.stringify({ username: username, email: emailVal, password: pwdVal })
     });
 
     if (!response.ok) {

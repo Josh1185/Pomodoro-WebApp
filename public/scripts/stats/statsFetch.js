@@ -53,7 +53,7 @@ function renderStats(stats) {
       </div>
       <div class="stat-widget">
         <p>Total Study Mins</p>
-        <h5 class="total-study-mins-display">${Math.floor(stats.total_pomodoro_time / 60)}</h5>
+        <h5 class="total-study-mins-display">${stats.total_pomodoro_time}</h5>
       </div>
       <div class="stat-widget">
         <p>Completed Pomodoros</p>

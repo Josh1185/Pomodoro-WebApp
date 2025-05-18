@@ -124,7 +124,7 @@ router.get('/pomodoro-history', async (req, res) => {
       FROM pomodoro_sessions
       WHERE user_id = $1
       GROUP BY DATE(completed_at)
-      ORDER BY date DESC
+      ORDER BY date
       LIMIT 30
     `;
 
@@ -135,7 +135,7 @@ router.get('/pomodoro-history', async (req, res) => {
       FROM pomodoro_sessions
       WHERE user_id = $1
       GROUP BY week_start
-      ORDER BY week_start DESC
+      ORDER BY week_start
       LIMIT 12
     `;
 
@@ -146,7 +146,7 @@ router.get('/pomodoro-history', async (req, res) => {
       FROM pomodoro_sessions
       WHERE user_id = $1
       GROUP BY month
-      ORDER BY month DESC
+      ORDER BY month
       LIMIT 6
     `;
 
