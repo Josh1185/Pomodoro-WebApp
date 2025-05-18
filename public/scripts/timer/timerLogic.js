@@ -6,7 +6,9 @@ import { openTimerModal } from "../dashboard/dashboardModals.js";
 import { getCurrentTask } from "../tasks/taskStorage.js";
 import { logPomodoroSession, updateStats } from "../stats/statsUpdate.js";
 
-let startingMins = getMinutes('pomo');
+let endTime;
+let remainingTime = 0;
+export let startingMins = getMinutes('pomo');
 let time = (startingMins * 60) - 1;
 let progressDegrees = 0;
 const timerEndSound = new Audio('../../sounds/timerAlarm.mp3');
@@ -19,13 +21,16 @@ export function initializeTimer(mins) {
   elapsedTime = 0;
   clearInterval(timerState.intervalId);
   startingMins = mins;
-  time = (startingMins * 60) - 1;
+
+  // time = (startingMins * 60) - 1;
+  endTime = Date.now() + (startingMins * 60 * 1000);
+
   timerState.progressPercentage = 0;
   updateTimerDisplay();
   document.title = `${displayTimerStepInHeader()} (${startingMins}:00)`;
   progressBar.style.background = `
     conic-gradient(
-      var(--accent-color) 0deg,
+      var(--accent-color) 360deg,
       var(--background-color-2) 0deg
     )
   `;
@@ -70,9 +75,13 @@ function displayTimerStepInHeader() {
 }
 
 export function startTimer() {
-  // Minutes and seconds
-  let mins = Math.floor(time / 60);
-  let secs = time % 60;
+
+  const now = Date.now();
+  const timeLeft = Math.max(0, Math.floor((endTime - now) / 1000)) + 1;
+
+  let mins = Math.floor(timeLeft / 60);
+  let secs = timeLeft % 60;
+
   // Adding preceding zero before value if it's less than 10
   secs = secs < 10 ? `0${secs}` : secs;
   mins = mins < 10 ? `0${mins}` : mins;
@@ -81,25 +90,24 @@ export function startTimer() {
   document.title = `${displayTimerStepInHeader()} (${mins}:${secs})`;
 
   // Progress bar logic
-  const progressPercentageIncrement = (100 / (startingMins * 60));
-  timerState.progressPercentage += progressPercentageIncrement;
+  const totalDuration = startingMins * 60;
+  timerState.progressPercentage = ((totalDuration - timeLeft) / totalDuration) * 100;
   // Convert percentage to degrees (Pie chart)
-  progressDegrees = (timerState.progressPercentage / 100) * 360;
+  const progressDegrees = (timerState.progressPercentage / 100) * 360;
   // Update progress bar
   progressBar.style.background = `
     conic-gradient(
-      var(--accent-color) ${progressDegrees}deg,
+      var(--accent-color) ${360 - progressDegrees}deg,
       var(--background-color-2) 0deg
     )
   `;
 
-  // Decrement the time each second
-  time--;
-  // Increment elapsed time each second
+  // update elapsed time
   elapsedTime++;
-  
-  // Check if the timer is done (time < 0)
-  if (time < 0) timerEnds();
+
+  if (timeLeft <= 0) {
+    timerEnds();
+  }
 }
 
 export async function timerEnds() {
@@ -182,4 +190,33 @@ export async function timerEnds() {
       initializeTimer(getMinutes('pomo'));
       break;
   }
+}
+
+export function startTimerBtnEvent() {
+  const now = Date.now();
+
+  // If resuming from pause, use remainingTime
+  if (remainingTime > 0) {
+    endTime = now + remainingTime;
+    remainingTime = 0;
+  } else {
+    endTime = now + (startingMins * 60 * 1000);
+  }
+
+  timerState.intervalId = setInterval(startTimer, 1000);
+  timerState.timerRunning = true;
+
+  startTimerBtn.style.display = 'none';
+  pauseTimerBtn.style.display = 'flex';
+}
+
+export function pauseTimerBtnEvent() {
+  clearInterval(timerState.intervalId);
+  timerState.timerRunning = false;
+
+  // Save how much time is left
+  remainingTime = endTime - Date.now();
+
+  startTimerBtn.style.display = 'flex';
+  pauseTimerBtn.style.display = 'none';
 }

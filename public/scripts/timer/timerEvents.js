@@ -1,6 +1,6 @@
 import { timerState, getMinutes } from "./timerState.js";
 import { startTimerBtn, pauseTimerBtn, skipTimerBtn, pomodoroStepBtn, longBreakStepBtn, shortBreakStepBtn } from "./timerElements.js";
-import { elapsedTime, initializeTimer, startTimer, timerEnds } from "./timerLogic.js";
+import { elapsedTime, initializeTimer, startTimer, timerEnds, startTimerBtnEvent, pauseTimerBtnEvent } from "./timerLogic.js";
   
   pomodoroStepBtn.addEventListener('click', () => {
     timerState.currentStep = "pomodoro";
@@ -24,17 +24,11 @@ import { elapsedTime, initializeTimer, startTimer, timerEnds } from "./timerLogi
   });
   
   startTimerBtn.addEventListener('click', () => {
-    timerState.intervalId = setInterval(startTimer, 1000); // start timer
-    timerState.timerRunning = true;
-    startTimerBtn.style.display = 'none';
-    pauseTimerBtn.style.display = 'flex';
+    startTimerBtnEvent();
   });
   
   pauseTimerBtn.addEventListener('click', () => {
-    clearInterval(timerState.intervalId);
-    timerState.timerRunning = false;
-    startTimerBtn.style.display = 'flex';
-    pauseTimerBtn.style.display = 'none';
+    pauseTimerBtnEvent();
   });
   
   skipTimerBtn.addEventListener('click', () => {

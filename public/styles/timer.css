@@ -59,7 +59,7 @@
 .timer {
   position: relative;
   font-size: 6.4rem;
-  font-family: Ubuntu Mono, monospace;
+  font-family: Lekton, monospace;
   color: var(--text-color);
 }
 

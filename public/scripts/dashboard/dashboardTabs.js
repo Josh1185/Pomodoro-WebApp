@@ -3,6 +3,7 @@ import { fetchStats } from "../stats/statsFetch.js";
 import { fetchTasks } from "../tasks/taskStorage.js";
 import { initializeTimer } from "../timer/timerLogic.js";
 import { showCurrentTaskOnTimerPage } from "../timer/timerState.js";
+import { updateChart } from "../stats/statsGraph.js";
 
 // Logout functionality
 const logoutBtn = document.querySelector('.logout-btn');
@@ -87,6 +88,7 @@ async function renderTasksPage() {
 
 async function renderStatsPage() {
   await fetchStats();
+  await updateChart('daily');
   timerWrapper.style.display = "none";
   tasksWrapper.style.display = "none";
   statsWrapper.style.display = "flex";
