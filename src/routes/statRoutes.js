@@ -5,24 +5,42 @@ const router = express.Router();
 
 // Get all stats for a logged in user GET/
 router.get('/', async (req, res) => {
+  const userId = req.userId;
+
+  const client = await pool.connect();
   try {
-    const userId = req.userId;
+    await client.query('BEGIN');
+
+    const getUsername = `
+      SELECT username 
+      FROM users
+      WHERE id = $1
+    `; 
     const getStats = `
       SELECT * FROM user_stats
       WHERE user_id = $1
     `;
     const values = [userId];
 
-    const result = await pool.query(getStats, values);
-    if (result.rows.length === 0) {
+    const usernameResult = await client.query(getUsername, values);
+    const statsResult = await client.query(getStats, values);
+    if (statsResult.rows.length === 0 || usernameResult.rows.length === 0) {
+      await client.query('ROLLBACK');
       return res.status(404).json({ error: 'Stats not found' });
     }
 
-    res.json(result.rows[0]);
+    res.json({
+      username: usernameResult.rows[0],
+      stats: statsResult.rows[0]
+    });
   }
   catch (err) {
+    await client.query('ROLLBACK');
     console.log('Error fetching stats:', err);
     res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+  finally {
+    client.release();
   }
 });
 
