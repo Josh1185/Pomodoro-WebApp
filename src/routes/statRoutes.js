@@ -217,4 +217,27 @@ router.get('/leaderboards', async (req, res) => {
   }
 });
 
+// Endpoint for fetching username and email GET /stats/credentials
+router.get('/credentials', async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const fetchUsernameAndEmail = ` 
+      SELECT username, email
+      FROM users
+      WHERE id = $1
+    `;
+    const result = await pool.query(fetchUsernameAndEmail, [userId]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Error fetching username and email' });
+    }
+
+    res.json(result.rows[0]);
+  }
+  catch (err) {
+    console.error('Error fetching username and email:', err);
+    res.status(500).json({ error: 'Error fetching username and email' });
+  }
+});
+
 export default router;

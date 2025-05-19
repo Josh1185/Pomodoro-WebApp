@@ -1,15 +1,55 @@
 import { logoutUser } from "../authentication/user-logout.js";
 import { fetchStats } from "../stats/statsFetch.js";
-import { fetchTasks } from "../tasks/taskStorage.js";
+import { apiBase, fetchTasks } from "../tasks/taskStorage.js";
 import { initializeTimer } from "../timer/timerLogic.js";
 import { showCurrentTaskOnTimerPage } from "../timer/timerState.js";
 import { updateChart } from "../stats/statsGraph.js";
+import { accountModalWrapper, accountModalEmail, accountModalUsername, dismissAccountModalBtn } from "./dashboardModals.js";
+import { token } from "./dashboardAuth.js";
 
 // Logout functionality
 const logoutBtn = document.querySelector('.logout-btn');
 logoutBtn.addEventListener('click', () => {
+  accountModalWrapper.style.display = 'none';
   logoutUser();
 });
+
+// Account btn functionality
+const accountBtn = document.querySelector('.account-btn');
+accountBtn.addEventListener('click', () => {
+  openAccountModal();
+});
+
+dismissAccountModalBtn.addEventListener('click', () => {
+  accountModalWrapper.style.display = 'none';
+});
+
+async function openAccountModal() {
+  const data = await fetchUsernameAndEmail();
+  accountModalWrapper.style.display = 'block';
+  accountModalUsername.textContent = data.username;
+  accountModalEmail.textContent = data.email;
+}
+
+async function fetchUsernameAndEmail() {
+  try {
+    // make an api request
+    const response = await fetch(`${apiBase}stats/credentials`, {
+      headers: { 'Authorization': token }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch username and email');
+    }
+
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.log('Failed to fetch username and email', err);
+  }
+}
 
 // Tab functionality
 window.addEventListener('DOMContentLoaded', () => {

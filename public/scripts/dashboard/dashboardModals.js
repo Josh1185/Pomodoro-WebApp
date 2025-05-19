@@ -51,3 +51,9 @@ export function openTimerModal(title) {
     timerModalWrapper.style.display = 'none';
   }, { once: true });
 }
+
+// Account modal
+export const accountModalWrapper = document.querySelector('.account-info-popup-wrapper');
+export const accountModalUsername = document.querySelector('.info-popup-username');
+export const accountModalEmail = document.querySelector('.info-popup-email');
+export const dismissAccountModalBtn = document.querySelector('.dismiss-account-info-popup');
