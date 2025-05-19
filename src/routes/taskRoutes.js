@@ -199,6 +199,7 @@ router.delete('/delete/:id', async (req, res) => {
 
 // Mark a task as completed PUT /complete/:id
 router.put('/complete/:id', async (req, res) => {
+  let client;
   try {
     const {
       is_completed,
@@ -207,7 +208,7 @@ router.put('/complete/:id', async (req, res) => {
     const taskId = req.params.id;
     const userId = req.userId;
 
-    const client = await pool.connect();
+    client = await pool.connect();
     await client.query('BEGIN');
 
     // Check if the task is already completed
@@ -219,7 +220,7 @@ router.put('/complete/:id', async (req, res) => {
     );
 
     if (existingTaskResponse.rowCount === 0) {
-      await client.query('ROLLBACK');
+      if (client) await client.query('ROLLBACK');
       return res.status(404).json({ error: "Task not found or not authorized" });
     }
 
@@ -250,12 +251,12 @@ router.put('/complete/:id', async (req, res) => {
     res.json({ message: "Task marked as complete" });
   }
   catch (err) {
-    await client.query('ROLLBACK');
+    if (client) await client.query('ROLLBACK');
     console.log("Error marking task as complete: ", err);
     res.status(500).json({ error: "Internal server error" });
   }
   finally {
-    client.release();
+    if (client) client.release();
   }
 });
 

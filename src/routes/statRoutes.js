@@ -188,4 +188,33 @@ router.get('/pomodoro-history', async (req, res) => {
   }
 });
 
+// Get leaderboard data
+router.get('/leaderboards', async (req, res) => {
+  try {
+    const fetchTotalMinsLeaderboard = `
+      SELECT
+        ROW_NUMBER() OVER (ORDER BY SUM(ps.duration_minutes) DESC) AS rank,
+        u.username,
+        SUM(ps.duration_minutes) AS weekly_minutes
+      FROM users u
+      JOIN pomodoro_sessions ps ON u.id = ps.user_id
+      WHERE ps.completed_at >= DATE_TRUNC('week', CURRENT_DATE)
+      GROUP BY u.username
+      ORDER BY weekly_minutes DESC
+      LIMIT 50
+    `;
+
+    const result = await pool.query(fetchTotalMinsLeaderboard);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Leaderboard data not found' });
+    }
+
+    res.json(result.rows);
+  }
+  catch (err) {
+    console.error('Error fetching leaderboard data:', err);
+    res.status(500).json({ error: 'Failed to fetch leaderboard data' });
+  }
+});
+
 export default router;

@@ -3,7 +3,7 @@ import { fetchTasks } from "../tasks/taskStorage.js";
 import { initializeTimer } from "../timer/timerLogic.js";
 import { getMinutes } from "../timer/timerState.js";
 import { initSettings, settingsCache } from "../settings/settingsFetch.js";
-import { fetchStats } from '../stats/statsFetch.js';
+import { fetchLeaderboardData, fetchStats } from '../stats/statsFetch.js';
 import { createPomodoroChart, updateChart, updateChartAccentColor } from "../stats/statsGraph.js";
 
 function isTokenExpired(token) {

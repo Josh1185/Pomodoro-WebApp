@@ -85,11 +85,32 @@
   box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.27);
 }
 
+.streak-widget {
+  border: 2px solid var(--accent-color);
+}
+
+.streak-widget h5, .streak-widget p {
+  color: var(--accent-color);
+}
+
+.streak-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+}
+
+.streak-display svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--accent-color);
+}
+
 .stat-widget h5, .stat-widget p {
   margin: 0;
 }
 
-.stat-widget p {
+.stat-widget p:not(.streak-widget p) {
   color: var(--text-color);
 }
 
@@ -109,4 +130,56 @@
   width: 100%;
   display: flex;
   align-items: center;
+}
+
+/* leaderboard */
+
+.leaderboard-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.leaderboard-column-headers {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--background-color-2);
+  padding: 1rem;
+}
+
+.leaderboard-column-headers p {
+  margin: 0;
+  color: var(--accent-color);
+}
+
+.leaderboard-entries {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.leaderboard-entry {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--background-color-2);
+  padding: 1rem;
+}
+
+.rank-username-col {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rank-username-col p, .minutes-col p {
+  margin: 0;
+}
+
+.rank {
+  font-style: italic;
+  color: var(--accent-color);
 }

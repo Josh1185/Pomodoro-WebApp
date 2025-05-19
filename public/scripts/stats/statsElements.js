@@ -1,10 +1,15 @@
 import { updateChart } from './statsGraph.js';
+import { fetchLeaderboardData } from './statsFetch.js';
 
 export const statsContainer = document.querySelector('.stats-container');
-export const statsFilterBtn = document.querySelector('.stats-filter-btn');
-export const leaderboardFilterBtn = document.querySelector('.leaderboard-filter-btn');
+export const barGraphContainer = document.querySelector('.bar-graph-container');
 export const personalStatsContainer = document.querySelector('.personal-stats-container');
 export const usernameStatDisplay = document.querySelector('.username-stat-display');
+export const leaderboardContainer = document.querySelector('.leaderboard-container');
+export const leaderboardEntries = document.querySelector('.leaderboard-entries');
+
+export const statsFilterBtn = document.querySelector('.stats-filter-btn');
+export const leaderboardFilterBtn = document.querySelector('.leaderboard-filter-btn');
 
 // Stat displays
 export const streakDisplay = document.querySelector('.streak-display');
@@ -34,6 +39,25 @@ monthlyRangeBtn.addEventListener('click', () => {
   const graphRange = 'monthly';
   deactivatePrevRangeBtn(graphRange);
   updateChart(graphRange);
+});
+
+// Filter btns
+statsFilterBtn.addEventListener('click', () => {
+  personalStatsContainer.style.display = 'flex';
+  barGraphContainer.style.display = 'flex';
+  leaderboardContainer.style.display = 'none';
+  statsFilterBtn.classList.add('active');
+  leaderboardFilterBtn.classList.remove('active');
+});
+
+leaderboardFilterBtn.addEventListener('click', async () => {
+  await fetchLeaderboardData();
+
+  personalStatsContainer.style.display = 'none';
+  barGraphContainer.style.display = 'none';
+  leaderboardContainer.style.display = 'flex';
+  statsFilterBtn.classList.remove('active');
+  leaderboardFilterBtn.classList.add('active');
 });
 
 // function to deactivate prev range btns
