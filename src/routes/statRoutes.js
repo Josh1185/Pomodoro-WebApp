@@ -240,4 +240,45 @@ router.get('/credentials', async (req, res) => {
   }
 });
 
+// Endpoint to check if streak is expired
+router.get('/streak-check', async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const { rows } = await pool.query(`
+        SELECT last_study_date, consecutive_days_streak
+        FROM user_stats
+        WHERE user_id = $1
+    `, [userId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'User stats not found' });
+    }
+
+    const { last_study_date, consecutive_days_streak } = rows[0];
+    const today = new Date();
+    const lastDate = new Date(last_study_date);
+
+    // If the last study date is before yesterday, reset the streak to 0
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (lastDate < yesterday) {
+      await pool.query(`
+        UPDATE user_stats
+        SET consecutive_days_streak = 0
+        WHERE user_id = $1
+      `, [userId]);
+
+      return res.json({ message: 'Streak reset to 0 due to inactivity' });
+    }
+
+    res.json({ message: 'Streak still valid' });
+  }
+  catch (err) {
+    console.log('Streak check error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;

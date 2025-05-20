@@ -110,3 +110,21 @@ function renderLeaderboard(data) {
 
   leaderboardEntries.innerHTML = leaderboardHTML ? leaderboardHTML : `<p>No leaderboard data</p>`;
 }
+
+// Function to check streak
+export async function checkStreak() {
+  try {
+    // make api request
+    const response = await fetch(`${apiBase}stats/streak-check`, {
+      headers: { 'Authorization': token }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to check streak');
+    }
+  }
+  catch (err) {
+    console.log('Failed to check streak', err);
+  }
+}
