@@ -60,7 +60,9 @@ PG_USER=your_user                      # Database user
 PG_PASSWORD=your_pwd                   # Database password
 
 # (Optional) Google OAuth Configuration:
-# NOTE: For Google OAuth to work, you must have a Google Cloud project set up with OAuth credentials configured for your app's redirect URI. Visit: https://developers.google.com/identity/protocols/oauth2 
+# NOTE: For Google OAuth to work, 
+#       you must have a Google Cloud project set up with OAuth credentials configured for your app's redirect URI.
+#       Visit for help: https://developers.google.com/identity/protocols/oauth2
 
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
