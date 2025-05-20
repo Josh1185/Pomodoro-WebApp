@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    // Immediately run this when the page loads
+    window.onload = function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+
+      if (token) {
+        localStorage.setItem('token', token);
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
+      } else {
+        document.body.innerHTML = '<p>Login failed. No token received.</p>';
+      }
+    }
+  </script>
+</head>
+<body>
+  <p>Signing you in with Google...</p>
+</body>
+</html>

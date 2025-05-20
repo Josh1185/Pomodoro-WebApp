@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { pool } from '../dbconfig.js';
 import rateLimit from 'express-rate-limit';
+import passport from 'passport';
 
 const router = express.Router();
 
@@ -123,5 +124,19 @@ router.post('/login', loginLimiter, async (req, res) => {
     res.sendStatus(503).json({ error: "Service unavailable" });
   }
 });
+
+// Google routes
+router.get('/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+router.get('/google/callback',
+  passport.authenticate('google', { session: false }),
+  (req, res) => {
+    const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // Redirect and pass token in query string
+    res.redirect(`/google-success?token=${token}`);
+  }
+);
 
 export default router;

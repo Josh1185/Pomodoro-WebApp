@@ -81,11 +81,7 @@ button {
 /* Links */
 a {
   color: var(--text-color);
-  text-decoration: underline;
-}
-
-a:hover {
-  color: var(--accent-color);
+  margin: 0;
 }
 
 @keyframes slideUp {

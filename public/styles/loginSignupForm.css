@@ -23,6 +23,31 @@ body {
   animation: slideUp 0.8s ease-in-out forwards;
 }
 
+.google-signup-btn, .google-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #ffffff;
+  color: #444;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0;
+}
+
+.google-signup-btn:hover, .google-login-btn:hover {
+  background-color: #d5d5d5;
+}
+
+.google-signup-btn img, .google-login-btn img {
+  width: 20px;
+  height: 20px;
+}
+
 .inputs-container {
   width: 75%;
 }

@@ -7,6 +7,9 @@ import authMiddleware from './middleware/authMiddleware.js';
 import taskRoutes from './routes/taskRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import statRoutes from './routes/statRoutes.js';
+// Google oauth imports
+import passport from 'passport';
+import './passport/googleStrategy.js';
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -92,9 +95,16 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/login.html'));
 });
 
+app.get('/google-success', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/googleSuccess.html'));
+})
+
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/dashboard.html'));
 });
+
+// Initialize passport
+app.use(passport.initialize());
 
 // Routes
 app.use('/auth', authRoutes);

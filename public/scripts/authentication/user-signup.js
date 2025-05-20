@@ -6,6 +6,15 @@ if (localStorage.getItem('token')) {
   window.location.href = '/dashboard';
 }
 
+// google redirect
+document.querySelector('.google-signup-btn').addEventListener('click', () => {
+  signUpWithGoogle();
+});
+function signUpWithGoogle() {
+  // Redirect the user to the Google OAuth route
+  window.location.href = '/auth/google';
+}
+
 let token = localStorage.getItem('token');
 const apiBase = '/';
 
