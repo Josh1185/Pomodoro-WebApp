@@ -9,8 +9,8 @@ import { logPomodoroSession, updateStats } from "../stats/statsUpdate.js";
 let endTime;
 let remainingTime = 0;
 export let startingMins = getMinutes('pomo');
-let time = (startingMins * 60) - 1;
-let progressDegrees = 0;
+// let time = (startingMins * 60) - 1;
+// let progressDegrees = 0;
 const timerEndSound = new Audio('../../sounds/timerAlarm.mp3');
 export let elapsedTime = 0;
 timerEndSound.load();
@@ -22,6 +22,8 @@ export function initializeTimer(mins) {
   clearInterval(timerState.intervalId);
   startingMins = mins;
 
+  remainingTime = 0;
+  
   // time = (startingMins * 60) - 1;
   endTime = Date.now() + (startingMins * 60 * 1000);
 
@@ -77,7 +79,7 @@ function displayTimerStepInHeader() {
 export function startTimer() {
 
   const now = Date.now();
-  const timeLeft = Math.max(0, Math.floor((endTime - now) / 1000)) + 1;
+  const timeLeft = Math.max(0, Math.floor((endTime - now) / 1000));
 
   let mins = Math.floor(timeLeft / 60);
   let secs = timeLeft % 60;
@@ -200,9 +202,9 @@ export function startTimerBtnEvent() {
     endTime = now + remainingTime;
     remainingTime = 0;
   } else {
-    endTime = now + (startingMins * 60 * 1000);
+    endTime = now + (startingMins * 60 * 1000) + 1000;
   }
-
+  
   timerState.intervalId = setInterval(startTimer, 1000);
   timerState.timerRunning = true;
 
