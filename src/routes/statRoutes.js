@@ -44,6 +44,10 @@ router.get('/', async (req, res) => {
   }
 });
 
+function toUTCMidnight(date) {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+}
+
 // Update stats for a completed timer PUT /update
 router.put('/update', async (req, res) => {
   const { pomodoroTime } = req.body;
@@ -52,8 +56,6 @@ router.put('/update', async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-
-    const today = new Date().toISOString().slice(0, 10);
 
     const { rows } = await client.query(`
       SELECT last_study_date, consecutive_days_streak
@@ -70,34 +72,51 @@ router.put('/update', async (req, res) => {
     const { last_study_date, consecutive_days_streak } = rows[0];
     let newStreak = consecutive_days_streak;
 
+    const today = toUTCMidnight(new Date());
+    const lastDate = toUTCMidnight(new Date(last_study_date));
+    const yesterday = new Date(today);
+    yesterday.setUTCDate(today.getUTCDate() - 1);
+    const todayStr = today.toISOString().slice(0, 10);
+
+    let updateStreak = false;
+
     if (!last_study_date) {
       newStreak = 1;
-    }
-    else {
-      const lastDate = new Date(last_study_date);
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-
-      if (lastDate.toDateString() === yesterday.toDateString()) {
-        newStreak += 1;
-      }
-      else if (lastDate.toDateString() !== new Date().toDateString()) {
-        newStreak = 1;
-      }
+      updateStreak = true;
+    } else if (lastDate.getTime() === yesterday.getTime()) {
+      newStreak += 1;
+      updateStreak = true;
+    } else if (lastDate.getTime() === today.getTime()) {
+      // Same day, streak remains the same
+      updateStreak = false;
+    } else {
+      newStreak = 1;
+      updateStreak = true;
     }
 
     // Update stats query
-    await client.query(`
+    if (updateStreak) {
+      await client.query(`
       UPDATE user_stats
       SET total_pomodoro_time = total_pomodoro_time + $1,
           total_pomodoros_completed = total_pomodoros_completed + 1,
           last_study_date = $2,
           consecutive_days_streak = $3
       WHERE user_id = $4
-    `, [pomodoroTime, today, newStreak, userId]);
+    `, [pomodoroTime, todayStr, newStreak, userId]);
+    }
+    else {
+      // Only update total time and completed count, not streak or last_study_date
+      await client.query(`
+        UPDATE user_stats
+        SET total_pomodoro_time = total_pomodoro_time + $1,
+            total_pomodoros_completed = total_pomodoros_completed + 1
+        WHERE user_id = $2
+      `, [pomodoroTime, userId]);
+    }
 
     await client.query('COMMIT');
-    res.json({ message: 'User stats updated successfully' });
+    res.json({ message: 'User stats updated successfully', last_study_date: last_study_date, lastDate: lastDate, today: todayStr, yesterday: yesterday });
   }
   catch (err) {
     await client.query('ROLLBACK');
@@ -256,13 +275,19 @@ router.get('/streak-check', async (req, res) => {
     }
 
     const { last_study_date, consecutive_days_streak } = rows[0];
-    const today = new Date();
-    const lastDate = new Date(last_study_date);
+
+    // handle new users or never studied
+    if (!last_study_date) {
+      return res.json({ message: 'No streak yet' });
+    }
+
+    const today = toUTCMidnight(new Date());
+    const lastDate = toUTCMidnight(new Date(last_study_date));
+    const yesterday = new Date(today);
+    yesterday.setUTCDate(today.getUTCDate() - 1);
+    const todayStr = today.toISOString().slice(0, 10);
 
     // If the last study date is before yesterday, reset the streak to 0
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
     if (lastDate < yesterday) {
       await pool.query(`
         UPDATE user_stats
@@ -273,7 +298,7 @@ router.get('/streak-check', async (req, res) => {
       return res.json({ message: 'Streak reset to 0 due to inactivity' });
     }
 
-    res.json({ message: 'Streak still valid' });
+    res.json({ message: 'Streak still valid', streak: consecutive_days_streak });
   }
   catch (err) {
     console.log('Streak check error:', err);
