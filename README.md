@@ -16,6 +16,7 @@ A web application that helps you boost productivity by combining the Pomodoro ti
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
+- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
 - [Author](#author)
@@ -34,39 +35,48 @@ A web application that helps you boost productivity by combining the Pomodoro ti
     ```
 
 3. **Start the application:**
+   - For production:
+     ```bash
+     npm start
+     ```
+   - For development (with hot reload):
+     ```bash
+     npm run dev
+
+4. **Running tests:**
     ```bash
-    npm start
+    npm test
     ```
 
 ## Usage
 
-- Start the timer and work in focused intervals.
-- Create and manage your tasks.
+- Start the timer and work in focused intervals
+- Create and manage your tasks
 - Click on a task to set it as the current focus
-- Mark tasks as complete when finished.
+- Mark tasks as complete when finished
 
 ## Configuration
 
-Before running the application, create a .env file in the root directory and add the following environment variables:
+Before running the application, copy `.env.example` to create your own environment files:
 
+```bash
+cp .env.example .env
+cp .env.example .env.test
 ```
-JWT_SECRET="your_secret_string"        # Secret key for signing JWT tokens
-PORT=3000                              # Port the server will run on
 
-PG_HOST=localhost                      # Host for the PostgreSQL database
-PG_PORT=5432                           # Port for the database
-PG_DATABASE=your_db                    # Database name
-PG_USER=your_user                      # Database user
-PG_PASSWORD=your_pwd                   # Database password
+Edit `.env` for development, `.env.test` for testing, and (optionally) create `.env.production` for production.  
+**Never commit real secrets to version control.**  
+All required environment variables are documented in `.env.example`.
 
-# (Optional) Google OAuth Configuration:
-# NOTE: For Google OAuth to work, 
-#       you must have a Google Cloud project set up with OAuth credentials configured for your app's redirect URI.
-#       Visit for help: https://developers.google.com/identity/protocols/oauth2
+## Testing
 
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+To run the test suite (using your test database and `.env.test`):
+
+```bash
+npm test
 ```
+
+Make sure your test database is set up and credentials are correct in `.env.test`.
 
 ## Contributing
 
