@@ -1,4 +1,13 @@
-.env
-node_modules/
 pomodoro-app.rest
 .vscode/
+
+node_modules/
+
+.env
+.env.*
+!.env.example
+
+logs/
+*.log
+
+coverage/

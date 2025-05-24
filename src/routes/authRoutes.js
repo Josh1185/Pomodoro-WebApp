@@ -117,7 +117,7 @@ router.post('/login', loginLimiter, async (req, res) => {
 
     // Successful authentication
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token });
+    res.status(202).json({ token });
 
   } catch (err) {
     console.error("Login error: ", err);

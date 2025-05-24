@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -71,8 +72,7 @@ async function initDb() {
         completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-
-    console.log('DB successfully initialized');
+    
   } catch (err) {
     console.log(err);
   }
@@ -112,6 +112,10 @@ app.use('/tasks', authMiddleware, taskRoutes);
 app.use('/settings', authMiddleware, settingsRoutes);
 app.use('/stats', authMiddleware, statRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server has started on port: ${PORT}`);
-});
+export default app;
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server has started on port: ${PORT}`);
+  });
+}
