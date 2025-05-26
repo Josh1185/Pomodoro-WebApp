@@ -360,13 +360,13 @@ describe('Test Suite: Protected Task Routes', () => {
       WHERE id = $1 AND user_id = $2
     `, [testTaskId, testUserId]);
     expect(afterPomo.rows[0].completed_pomodoros).to.equal(1);
-    
+
   });
 
   // Cleanup test db after test suite
   after(async () => {
     await pool.query('DELETE FROM users');
-    await pool.query('DELETE FROM tasks')
+    await pool.query('DELETE FROM tasks');
     await pool.query('DELETE FROM user_settings');
     await pool.query('DELETE FROM user_stats');
   });
