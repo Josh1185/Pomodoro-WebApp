@@ -98,7 +98,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Update completed pomodoros /pomos/:id (AND STATS)
+// Update completed pomodoros /pomos/:id
 router.put('/pomos/:id', async (req, res) => {
   try {
     const { completed_pomodoros } = req.body;
@@ -119,7 +119,7 @@ router.put('/pomos/:id', async (req, res) => {
       return res.status(404).json({ error: "Task not found or not authorized" });
     }
 
-    res.json({ message: "Current task completed_pomodoros updated successfully and stats updated successfully" });
+    res.json({ message: "Current task completed_pomodoros updated successfully" });
   }
   catch (err) {
     console.log("Error updating current task completed_pomodoros: ", err);
