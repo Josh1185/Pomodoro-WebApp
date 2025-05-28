@@ -116,7 +116,7 @@ router.put('/update', async (req, res) => {
     }
 
     await client.query('COMMIT');
-    res.json({ message: 'User stats updated successfully', last_study_date: last_study_date, lastDate: lastDate, today: todayStr, yesterday: yesterday });
+    res.json({ message: 'User stats updated successfully' });
   }
   catch (err) {
     await client.query('ROLLBACK');
@@ -156,18 +156,18 @@ router.get('/pomodoro-history', async (req, res) => {
 
     const dailySessionQuery = `
       SELECT
-        DATE(completed_at) AS date,
+        DATE(completed_at AT TIME ZONE 'UTC') AS date,
         SUM(duration_minutes) AS minutes
       FROM pomodoro_sessions
       WHERE user_id = $1
-      GROUP BY DATE(completed_at)
+      GROUP BY DATE(completed_at AT TIME ZONE 'UTC')
       ORDER BY date
       LIMIT 30
     `;
 
     const weeklySessionQuery = `
       SELECT
-        DATE_TRUNC('week', completed_at)::date AS week_start,
+        DATE_TRUNC('week', completed_at AT TIME ZONE 'UTC')::date AS week_start,
         SUM(duration_minutes) AS minutes
       FROM pomodoro_sessions
       WHERE user_id = $1
@@ -178,7 +178,7 @@ router.get('/pomodoro-history', async (req, res) => {
 
     const monthlySessionQuery = `
       SELECT 
-        TO_CHAR(completed_at, 'YYYY-MM') AS month,
+        TO_CHAR(completed_at AT TIME ZONE 'UTC', 'YYYY-MM') AS month,
         SUM(duration_minutes) AS minutes
       FROM pomodoro_sessions
       WHERE user_id = $1
@@ -295,7 +295,7 @@ router.get('/streak-check', async (req, res) => {
         WHERE user_id = $1
       `, [userId]);
 
-      return res.json({ message: 'Streak reset to 0 due to inactivity' });
+      return res.json({ message: 'Streak reset to 0 due to inactivity', streak: 0 });
     }
 
     res.json({ message: 'Streak still valid', streak: consecutive_days_streak });
