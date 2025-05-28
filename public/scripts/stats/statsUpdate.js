@@ -5,7 +5,7 @@ import { fetchStats } from "./statsFetch.js";
 export async function updateStats(elapsedTime) {
   try {
 
-    const elapsedMins = Math.floor((elapsedTime + 1) / 60);
+    const elapsedMins = Math.floor((elapsedTime + 28) / 60);
 
     // make api request
     const response = await fetch(`${apiBase}stats/update`, {
@@ -34,7 +34,7 @@ export async function updateStats(elapsedTime) {
 export async function logPomodoroSession(elapsedTime) {
 
   const currentTask = getCurrentTask();
-  const elapsedMins = Math.floor((elapsedTime + 1)/ 60);
+  const elapsedMins = Math.floor((elapsedTime + 28)/ 60);
 
   try {
     // make api request
