@@ -180,7 +180,7 @@ router.post('/forgot-password', async (req, res) => {
           pass: process.env.GMAIL_PASS,
         }
       });
-      resetLink = `http://localhost:5050/reset-password?token=${token}`;
+      resetLink = `https://pomomanager.onrender.com/reset-password?token=${token}`;
     }
 
     // Send email

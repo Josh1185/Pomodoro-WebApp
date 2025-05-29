@@ -21,7 +21,7 @@ const __dirname = dirname(__filename);
 
 // Middleware
 app.use(express.json());
-app.use(helmet);
+app.use(helmet());
 
 // Init DB on server start
 async function initDb() {
