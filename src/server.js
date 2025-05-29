@@ -96,6 +96,14 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src-elem 'self' https://unpkg.com https://cdn.jsdelivr.net https://cdn.skypack.dev; object-src 'none';"
+  );
+  next();
+});
+
 // Endpoint for '/': Serves up the home html file from the /public directory
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
