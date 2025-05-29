@@ -11,6 +11,7 @@ import statRoutes from './routes/statRoutes.js';
 // Google oauth imports
 import passport from 'passport';
 import './passport/googleStrategy.js';
+import helmet from 'helmet';
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -20,6 +21,7 @@ const __dirname = dirname(__filename);
 
 // Middleware
 app.use(express.json());
+app.use(helmet);
 
 // Init DB on server start
 async function initDb() {
@@ -83,6 +85,16 @@ initDb();
 
 // Tells express to serve home HTML file from the /public directory
 app.use(express.static(path.join(__dirname, '../public')));
+
+// Production middleware for https
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect('https://' + req.headers.host + req.url);
+    }
+    next();
+  });
+}
 
 // Endpoint for '/': Serves up the home html file from the /public directory
 app.get('/', (req, res) => {
