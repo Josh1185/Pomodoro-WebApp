@@ -30,7 +30,9 @@ async function initDb() {
         username VARCHAR(100) NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL, 
         password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        reset_token VARCHAR(255) DEFAULT NULL,
+        reset_token_expires TIMESTAMP DEFAULT NULL
       );
 
       CREATE TABLE IF NOT EXISTS tasks (
@@ -93,6 +95,14 @@ app.get('/signup', (req, res) => {
 
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/login.html'));
+});
+
+app.get('/forgot-password', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/forgot-password.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/reset-password.html'));
 });
 
 app.get('/google-success', (req, res) => {

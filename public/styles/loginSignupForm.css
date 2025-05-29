@@ -9,7 +9,7 @@ body {
   overflow: hidden;
 }
 
-#signup-auth, #login-auth {
+#signup-auth, #login-auth, #forgot-form, #reset-form {
   width: 80%;
   max-width: 450px;
   background-color: var(--background-color-1);
@@ -85,13 +85,15 @@ body {
   outline: none;
 }
 
-.error-display {
+.error-display, .forgot-message, .reset-message {
   text-align: left;
   font-style: italic;
 }
 
 .signup-btn, 
-.login-btn {
+.login-btn,
+.send-link-btn,
+.reset-pwd-btn {
   padding: 1rem 2.5rem;
   background-color: transparent;
   border-radius: 10px;
@@ -110,7 +112,11 @@ body {
 .signup-btn::after, 
 .signup-btn::before, 
 .login-btn::after, 
-.login-btn::before {
+.login-btn::before,
+.send-link-btn::after,
+.send-link-btn::before,
+.reset-pwd-btn::after,
+.reset-pwd-btn::before {
   content: '';
   display: block;
   height: 100%;
@@ -125,36 +131,48 @@ body {
 }
 
 .signup-btn::before, 
-.login-btn::before {
+.login-btn::before,
+.send-link-btn::before,
+.reset-pwd-btn::before {
   top: -50%;
   left: -25%;
   transform: skew(90deg) rotate(180deg) translate(-50%, -50%);
 }
 
 .signup-btn:hover, 
-.login-btn:hover {
+.login-btn:hover,
+.send-link-btn:hover,
+.reset-pwd-btn:hover {
   color: #fff;
 }
 
 .signup-btn:hover::after, 
-.login-btn:hover::after {
+.login-btn:hover::after,
+.send-link-btn:hover::after,
+.reset-pwd-btn:hover::after {
   transform: skew(45deg) translate(-50%, -50%);
 }
 
 .signup-btn:hover::before, 
-.login-btn:hover::before {
+.login-btn:hover::before,
+.send-link-btn:hover::before,
+.reset-pwd-btn:hover::before {
   transform: skew(45deg) rotate(180deg) translate(-50%, -50%);
 }
 
 .signup-btn:active, 
-.login-btn:active {
+.login-btn:active,
+.send-link-btn:active,
+.reset-pwd-btn:active {
   filter: brightness(.7);
   transform: scale(.98);
 }
 
 @media only screen and (max-width: 600px) {
   .signup-btn,
-  .login-btn {
+  .login-btn,
+  .send-link-btn,
+  .reset-pwd-btn {
     background-color: var(--accent-color);
     color: #fff;
   }

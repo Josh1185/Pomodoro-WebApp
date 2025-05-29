@@ -19,6 +19,11 @@ describe('Test Suite: Server Endpoints', () => {
     expect(res.statusCode).to.equal(200);
   });
 
+  it('GET /forgot-password => should return 200', async () => {
+    const res = await request(app).get('/forgot-password');
+    expect(res.statusCode).to.equal(200);
+  });
+
   it('GET /dashboard => should return 200', async () => {
     const res = await request(app).get('/dashboard');
     expect(res.statusCode).to.equal(200);
