@@ -1,4 +1,5 @@
 import { fetchPomodoroSessions } from "./statsFetch.js";
+import Chart from '../libs/chart.min.js';
 
 let pomodoroChart;
 
