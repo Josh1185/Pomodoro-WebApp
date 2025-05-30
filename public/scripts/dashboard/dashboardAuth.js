@@ -1,4 +1,4 @@
-import { jwtDecode } from "https://cdn.skypack.dev/jwt-decode";
+
 import { fetchTasks } from "../tasks/taskStorage.js";
 import { initializeTimer } from "../timer/timerLogic.js";
 import { getMinutes } from "../timer/timerState.js";
@@ -8,7 +8,7 @@ import { createPomodoroChart, updateChart, updateChartAccentColor } from "../sta
 
 function isTokenExpired(token) {
   try {
-    const { exp } = jwtDecode(token);
+    const { exp } = jwt_decode(token);
     return Date.now() >= exp * 1000;
   }
   catch {
