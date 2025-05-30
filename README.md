@@ -2,6 +2,11 @@
 
 A web application that helps you boost productivity by combining the Pomodoro time management method with a simple task manager.
 
+## Link
+https://pomomanager.onrender.com/
+
+Deployed using Render and Supabase
+
 ## Features
 
 - Pomodoro timer with customizable intervals
