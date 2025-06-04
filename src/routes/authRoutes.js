@@ -9,16 +9,6 @@ import nodemailer from 'nodemailer';
 
 const router = express.Router();
 
-// Rate limiting for login
-const loginLimiter = rateLimit({
-  windowMS: 15 * 60 * 1000, // 15 mins
-  max: 5, // LIMIT EACH IP TO 5 REQUESTS PER windowMS
-  message: {
-    error: 'Too many login attempts. Please try again in 15 mins.'
-  },
-  standardHeaders: true,
-  legacyHeaders: false
-});
 
 // Endpoint for users signing up POST /auth/signup
 router.post('/signup', async (req, res) => {
@@ -94,7 +84,7 @@ router.post('/signup', async (req, res) => {
 });
 
 // Endpoint for users loging in POST /auth/login
-router.post('/login', loginLimiter, async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   // Match the credentials to a user in the database

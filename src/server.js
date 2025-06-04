@@ -12,6 +12,7 @@ import statRoutes from './routes/statRoutes.js';
 import passport from 'passport';
 import './passport/googleStrategy.js';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -19,9 +20,30 @@ const PORT = process.env.PORT || 5050;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// api route rate limiter
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { error: 'Too many requests from this IP, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// auth rate limiter
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 mins
+  max: 5, // LIMIT EACH IP TO 5 REQUESTS PER windowMS
+  message: {
+    error: 'Too many attempts. Please try again in 15 mins.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 // Middleware
-app.use(express.json());
 app.use(helmet());
+app.use(express.json());
+app.use(passport.initialize());
 
 // Init DB on server start
 async function initDb() {
@@ -125,14 +147,21 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/dashboard.html'));
 });
 
-// Initialize passport
-app.use(passport.initialize());
+// function to rate limit on post, put, and delete methods
+function rateLimitOnMethods(limiter, methods = ['POST', 'PUT', 'DELETE']) {
+  return (req, res, next) => {
+    if (methods.includes(req.method)) {
+      return limiter(req, res, next);
+    }
+    next();
+  };
+}
 
 // Routes
-app.use('/auth', authRoutes);
-app.use('/tasks', authMiddleware, taskRoutes);
-app.use('/settings', authMiddleware, settingsRoutes);
-app.use('/stats', authMiddleware, statRoutes);
+app.use('/auth', authLimiter, authRoutes);
+app.use('/tasks', authMiddleware, rateLimitOnMethods(apiLimiter), taskRoutes);
+app.use('/settings', authMiddleware, rateLimitOnMethods(apiLimiter), settingsRoutes);
+app.use('/stats', authMiddleware, rateLimitOnMethods(apiLimiter), statRoutes);
 
 export default app;
 
