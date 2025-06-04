@@ -40,6 +40,9 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
+// Trust the first proxy for rate limiting
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
 app.use(express.json());
